@@ -1,0 +1,4 @@
+(doom-pkgs-profile
+  :fetcher github
+  :repo "bx-blee/doom-pkgs-profile"
+  :files ("*.el"))

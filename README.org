@@ -1,0 +1,27 @@
+
+#+TITLE: doom-pkgs-profile
+
+
+* Doom Packages Profile -- For Use Outside Of Doom
+
+Doom is many things.
+
+One of those is that of a consistent and stable set of packages as a profile.
+
+Such a packages profile can now also be used outside of Doom.
+
+* Extraction Of Packages From Doom
+
+** Clone All Doom Packages
+
+- Enable all packages
+- Doom install
+- clone all packages
+
+** ICM Walks Through Cloned Packages And Creates Packages list
+
+* Packages List -- Kept At /bisos/blee/profiles/doom/doom-3-00B.el/
+
+* b:profiles:doom:3.00B  is a list of all packages and their versions
+
+* (b:straight:profile|install profile pkgName)
