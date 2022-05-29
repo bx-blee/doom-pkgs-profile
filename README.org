@@ -18,10 +18,11 @@ Such a packages profile can now also be used outside of Doom.
 - Doom install
 - clone all packages
 
-** ICM Walks Through Cloned Packages And Creates Packages list
+** /bisos/core/bsip/bin/doomPkgsProfile.sh Walks Through Cloned Packages And Creates Packages list
 
-* Packages List -- Kept At /bisos/blee/profiles/doom/doom-3-00B.el/
+* Packages List -- Kept At /bisos/blee/profiles/doom/doom-3.0.0-alpha.el
+And also at ./profiles//doom-3.0.0-alpha.el
 
-* b:profiles:doom:3.00B  is a list of all packages and their versions
+* b:profiles:doom:3.0.0-alpha  is a list of all packages and their versions
 
 * (b:straight:profile|install profile pkgName)
