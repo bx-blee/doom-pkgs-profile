@@ -1,6 +1,11 @@
 
-#+TITLE: doom-pkgs-profile
+#+TITLE: pkgs-profile
 
+pkgs-profile is a general purpose package that creates a consistent set of
+pinned packages based on their commitHash.
+
+straight pkg installs go through pkgs-profile as a result the set remains
+consistent and stable.
 
 * Doom Packages Profile -- For Use Outside Of Doom
 
