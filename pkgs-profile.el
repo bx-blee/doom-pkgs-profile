@@ -113,9 +113,9 @@
   )
 
 
-;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "Blee Package Information" :extraInfo "Canonical"
+;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "Blee Package Information" :extraInfo "Canonical -- OBSOLETED"
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _Blee Package Information_: |]]  Canonical  [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _Blee Package Information_: |]]  Canonical -- OBSOLETED  [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
 ;;;#+END:
 
@@ -187,100 +187,32 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 
 " orgCmntEnd)
 
-
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:blee3:native|prepare"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:blee3:native|prepare>> [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-(defun b:pkgsProfile:blee3:native|prepare (
-;;;#+END:
-                                           <pkgsProfileName)
-   " #+begin_org
-** DocStr: For now,  *<pkgsProfileName* ignored for now.
-Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0.alpha.
-#+end_org "
-   (let* (
-          ($pkgsListIntake)
-         )
-     (setq $pkgsListIntake (b:read|fromFile "/bisos/blee/profiles/blee/blee3-native.el"))
-     (b:remprop-all 'b:pkgsProfile:blee3:native)
-     (dolist ($each $pkgsListIntake)
-       ;;(print (car $each))
-       (put 'b:pkgsProfile:blee3:native (car $each) (cdr $each)))
-     ;;(symbol-plist 'b:pkgsProfile:blee3:native)
-     ))
-
-
-(orgCmntBegin "
-** Basic Usage:
-#+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:blee3:native|prepare 'ignored)
-#+END_SRC
-
-#+RESULTS:
-
-" orgCmntEnd)
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:blee3:adopted|prepare"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:blee3:adopted|prepare>> [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-(defun b:pkgsProfile:blee3:adopted|prepare (
-;;;#+END:
-                                           <pkgsProfileName)
-   " #+begin_org
-** DocStr: For now,  *<pkgsProfileName* ignored for now.
-Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0.alpha.
-#+end_org "
-   (let* (
-          ($pkgsListIntake)
-         )
-     (setq $pkgsListIntake (b:read|fromFile "/bisos/blee/profiles/blee/blee3-adopted.el"))
-     (b:remprop-all 'b:pkgsProfile:blee3:adopted)
-     (dolist ($each $pkgsListIntake)
-       ;;(print (car $each))
-       (put 'b:pkgsProfile:blee3:adopted (car $each) (cdr $each)))
-     ;;(symbol-plist 'b:pkgsProfile:blee3:adopted)
-     ))
-
-
-(orgCmntBegin "
-** Basic Usage:
-#+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:blee3:native|adopted 'ignored)
-#+END_SRC
-
-#+RESULTS:
-
-" orgCmntEnd)
-
-
 ;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:pkg|obtainInfo"
 (orgCmntBegin "
 * [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:pkg|obtainInfo>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
 (defun b:pkgsProfile:pkg|obtainInfo (
 ;;;#+END:
-                                     <pkgsProfileName <pkgName)
+                                     <pkgsProfileSymbol <pkgName)
    " #+begin_org
-** DocStr: **<pkgsProfileName** ignored for now. Return keyword list for *<pkgName*
+** DocStr: Given **<pkgsProfileSymbol* return info (commitHash) for *<pkgName*.
+*<pkgName* is a string.
 #+end_org "
    (let* (
-          ($result)
+          ($pkgsList (get <pkgsProfileSymbol ':pkgsList))
+          ($pkgInfo (assoc <pkgName $pkgsList))
          )
-     (setq $result
-           (get 'b:pkgsProfile:doom:3.0.0.alpha <pkgName))
+     (cdr $pkgInfo)
      ))
 
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:pkg|obtainInfo 'doom:3.0.0.alpha 'add-node-modules-path)
+(b:pkgsProfile:pkg|obtainInfo 'b:pkgsProfile:blee3:doom3 \"add-node-modules-path\")
 #+END_SRC
 
 #+RESULTS:
-| :repoUrl | https://github.com/codesuki/add-node-modules-path.git | :commit | 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6 |
+: 7d9be65b3be062842b7ead862dec15d6f25db4a2
 
 " orgCmntEnd)
 
@@ -291,7 +223,7 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 " orgCmntEnd)
 (defun b:pkgsProfile:pkg:blee3|obtainInfo (
 ;;;#+END:
-                                     <pkgsProfileName <pkgName)
+                                           <pkgsProfileName <pkgName)
    " #+begin_org
 ** DocStr: **<pkgsProfileName** ignored for now. Return keyword list for *<pkgName*
 #+end_org "
@@ -315,16 +247,14 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 " orgCmntEnd)
 (defun b:pkgsProfile:pkg:straight|install (
 ;;;#+END:
-                                           <pkgsProfileName <pkgName)
+                                           <pkgsProfileSymbol <pkgName &optional <ref)
    " #+begin_org
 ** DocStr: *<pkgsProfileName* ignored for now. *<pkgName* is installed through straight.
 #+end_org "
   (let* (
-          ($pkgInfo (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
-          ($repoUrl (or (plist-get $pkgInfo :repoUrl) "UnSpecified"))
-          ($commit (or (plist-get $pkgInfo :commit) "UnSpecified"))
+         ($profilePkgRef (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
          )
-    $commit
+    (message "straight-use-package with profileName, pkgName and commitHash comes here.")
      ))
 
 
@@ -486,6 +416,8 @@ The original straight--lockfile-read-all comes first.
 ;;;#+END:
 
 ;;; (straight--lockfile-read-all)
+
+;;; (straight-use-package 'emms) (straight-use-package 'pyvenv) (straight-use-package 'avy) (straight-use-package 'tide)
 
 ;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:blee3|pinnedListAll"
 (orgCmntBegin "
