@@ -76,6 +76,20 @@
   )
 (put 'b:pkgsProfile:blee3:adopted ':profileName "blee3-adopted")
 
+(defvar b:pkgsProfile:blee3:explicit "/bisos/blee/profiles/blee3/explicit-pkgsProfile.el"
+   " #+begin_org
+** =b:pkgsProfile:blee3:explicit= list of packages and their versions.
+#+end_org "
+  )
+(put 'b:pkgsProfile:blee3:explicit ':profileName "blee3-explicit")
+
+(defvar b:pkgsProfile:blee3:ephemera "/bisos/blee/profiles/blee3/ephemera-pkgsProfile.el"
+   " #+begin_org
+** =b:pkgsProfile:blee3:ephemera= list of packages and their versions.
+#+end_org "
+  )
+(put 'b:pkgsProfile:blee3:aphemera ':profileName "blee3-ephemera")
+
 (defvar b:pkgsProfile:blee3:realm-site "/bisos/blee/profiles/blee3/realm-site-pkgsProfile.el"
    " #+begin_org
 ** =b:pkgsProfile:blee3:adopted= list of packages and their versions.
@@ -96,6 +110,10 @@
     b:pkgsProfile:blee3:doom3
     b:pkgsProfile:blee3:native
     b:pkgsProfile:blee3:adopted
+    b:pkgsProfile:blee3:explicit
+    b:pkgsProfile:blee3:ephemera
+    b:pkgsProfile:blee3:realm-site
+    b:pkgsProfile:blee3:realm-user
     )
    " #+begin_org
 ** =b:pkgsProfile:blee3:all= list of packages and their versions.
@@ -106,6 +124,10 @@
   `(
     b:pkgsProfile:blee3:native
     b:pkgsProfile:blee3:adopted
+    b:pkgsProfile:blee3:explicit
+    b:pkgsProfile:blee3:ephemera
+    b:pkgsProfile:blee3:realm-site
+    b:pkgsProfile:blee3:realm-user
     )
    " #+begin_org
 ** =b:pkgsProfile:blee3:all= list of packages and their versions.
