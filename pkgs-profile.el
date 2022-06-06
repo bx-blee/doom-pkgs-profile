@@ -1,4 +1,4 @@
-;;; doom-pkgs-profile.el --- Doom Packages Profile From Outside Of Doom  -*- lexical-binding: t; -*-
+;;; pkgs-profile.el --- Packages Profile  -*- lexical-binding: t; -*-
 
 (orgCmntBegin "
 * Summary: Library to process Doom packages profile.
@@ -47,93 +47,29 @@
 " orgCmntEnd)
 ;;;#+END:
 
-
-;;; OBSOLETED
-(defvar b:pkgsProfile:doom:3.0.0.alpha nil
+(defvar pkg:straight:explicit:info
+  '()
    " #+begin_org
-** =b:pkgsProfile:doom:3.0.0.alpha= list of doom version 3.0.0.alpha packages and their versions.
+** =b:pkgsProfile:frmWrk:example= list of  packages and their versions.
 #+end_org "
   )
 
-(defvar b:pkgsProfile:blee3:doom3 "/bisos/blee/profiles/blee3/doom3-pkgsProfile.el"
+
+(defvar b:pkgsProfile:frmWrk:example "./profiles/frmWrkExample-pkgsProfile.el"
    " #+begin_org
-** =b:pkgsProfile:blee3:doom3= list of doom version 3.0.0.alpha packages and their versions.
+** =b:pkgsProfile:frmWrk:example= list of  packages and their versions.
 #+end_org "
   )
-(put 'b:pkgsProfile:blee3:doom3 ':profileName "blee3-doom3")
+(put 'b:pkgsProfile:frmWrk:example ':profileName "frmWrk:example")
 
-(defvar b:pkgsProfile:blee3:native "/bisos/blee/profiles/blee3/native-pkgsProfile.el"
-   " #+begin_org
-** =b:pkgsProfile:blee3:native= list of packages and their versions as property-list.
-#+end_org "
-  )
-(put 'b:pkgsProfile:blee3:native ':profileName "blee3-native")
-
-(defvar b:pkgsProfile:blee3:adopted "/bisos/blee/profiles/blee3/adopted-pkgsProfile.el"
-   " #+begin_org
-** =b:pkgsProfile:blee3:adopted= list of packages and their versions.
-#+end_org "
-  )
-(put 'b:pkgsProfile:blee3:adopted ':profileName "blee3-adopted")
-
-(defvar b:pkgsProfile:blee3:explicit "/bisos/blee/profiles/blee3/explicit-pkgsProfile.el"
-   " #+begin_org
-** =b:pkgsProfile:blee3:explicit= list of packages and their versions.
-#+end_org "
-  )
-(put 'b:pkgsProfile:blee3:explicit ':profileName "blee3-explicit")
-
-(defvar b:pkgsProfile:blee3:ephemera "/bisos/blee/profiles/blee3/ephemera-pkgsProfile.el"
-   " #+begin_org
-** =b:pkgsProfile:blee3:ephemera= list of packages and their versions.
-#+end_org "
-  )
-(put 'b:pkgsProfile:blee3:aphemera ':profileName "blee3-ephemera")
-
-(defvar b:pkgsProfile:blee3:realm-site "/bisos/blee/profiles/blee3/realm-site-pkgsProfile.el"
-   " #+begin_org
-** =b:pkgsProfile:blee3:adopted= list of packages and their versions.
-#+end_org "
-  )
-(put 'b:pkgsProfile:blee3:realm-site ':profileName "blee3-realm-site")
-
-(defvar b:pkgsProfile:blee3:realm-user "/bisos/blee/profiles/blee3/realm-user-pkgsProfile.el"
-   " #+begin_org
-** =b:pkgsProfile:blee3:adopted= list of packages and their versions.
-#+end_org "
-  )
-(put 'b:pkgsProfile:blee3:realm-site ':profileName "blee3-realm-user")
-
-
-(defvar b:pkgsProfile:blee3:all
+(defvar b:pkgsProfile:frmWrkExample:all
   `(
-    b:pkgsProfile:blee3:doom3
-    b:pkgsProfile:blee3:native
-    b:pkgsProfile:blee3:adopted
-    b:pkgsProfile:blee3:explicit
-    b:pkgsProfile:blee3:ephemera
-    b:pkgsProfile:blee3:realm-site
-    b:pkgsProfile:blee3:realm-user
+    b:pkgsProfile:frmWrk:example
     )
    " #+begin_org
-** =b:pkgsProfile:blee3:all= list of packages and their versions.
+** =b:pkgsProfile:frmWrkExample:all= list of packages and their versions.
 #+end_org "
   )
-
-(defvar b:pkgsProfile:blee3:allSansDoom3
-  `(
-    b:pkgsProfile:blee3:native
-    b:pkgsProfile:blee3:adopted
-    b:pkgsProfile:blee3:explicit
-    b:pkgsProfile:blee3:ephemera
-    b:pkgsProfile:blee3:realm-site
-    b:pkgsProfile:blee3:realm-user
-    )
-   " #+begin_org
-** =b:pkgsProfile:blee3:all= list of packages and their versions.
-#+end_org "
-  )
-
 
 ;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "Blee Package Information" :extraInfo "Canonical -- OBSOLETED"
 (orgCmntBegin "
@@ -141,52 +77,15 @@
 " orgCmntEnd)
 ;;;#+END:
 
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:doom3|prepare"
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:file:read|prepare"
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:doom3|prepare>> [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:file:read|prepare>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(defun b:pkgsProfile:doom3|prepare (
-;;;#+END:
-                                    <pkgsProfileName)
-   " #+begin_org
-** DocStr: For now, we only support doom:3.0.0.alpha. *<pkgsProfileName* ignored for now.
-Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0.alpha.
-#+end_org "
-   (let* (
-          ($pkgsListIntake)
-         )
-     (setq $pkgsListIntake (b:read|fromFile "/bisos/blee/profiles/doom/doom-3.0.0-alpha.el"))
-     ;;
-     ;; Next we setup b:pkgsProfile:doom:3.0.0.alpha
-     ;;
-     (b:remprop-all 'b:pkgsProfile:doom:3.0.0.alpha)
-     (dolist ($each $pkgsListIntake)
-       ;;(print (car $each))
-       (put 'b:pkgsProfile:doom:3.0.0.alpha (car $each) (cdr $each)))
-     ;;(symbol-plist 'b:pkgsProfile:doom:3.0.0.alpha)
-     ))
-
-
-(orgCmntBegin "
-** Basic Usage:
-#+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:doom3|prepare 'b:pkgsProfile:blee3:doom3)
-#+END_SRC
-
-#+RESULTS:
-
-" orgCmntEnd)
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:blee3:read|prepare"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:blee3:read|prepare>> [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-(defun b:pkgsProfile:blee3:read|prepare (
+(defun b:pkgsProfile:file:read|prepare (
 ;;;#+END:
                                          <pkgsProfileSymbol)
    " #+begin_org
-** DocStr:
-Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0.alpha.
+** DocStr: Read from *<pkgsProfileSymbol* file and capture that as ~:pkgsList~ property list.
 #+end_org "
    (let* (
           ($pkgsProfile (eval <pkgsProfileSymbol))
@@ -202,7 +101,7 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:blee3:read|prepare 'b:pkgsProfile:blee3:doom3)
+(b:pkgsProfile:file:read|prepare 'b:pkgsProfile:frmWrk:example)
 #+END_SRC
 
 #+RESULTS:
@@ -217,8 +116,8 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 ;;;#+END:
                                      <pkgsProfileSymbol <pkgName)
    " #+begin_org
-** DocStr: Given **<pkgsProfileSymbol* return info (commitHash) for *<pkgName*.
-*<pkgName* is a string.
+** DocStr: Given *<pkgsProfileSymbol* return info (commitHash) for *<pkgName*.
+Type of *<pkgName* is a string.
 #+end_org "
    (let* (
           ($pkgsList (get <pkgsProfileSymbol ':pkgsList))
@@ -230,7 +129,7 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:pkg|obtainInfo 'b:pkgsProfile:blee3:doom3 \"add-node-modules-path\")
+(b:pkgsProfile:pkg|obtainInfo 'b:pkgsProfile:frmWrk:example \"add-node-modules-path\")
 #+END_SRC
 
 #+RESULTS:
@@ -238,40 +137,15 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 
 " orgCmntEnd)
 
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:pkg:blee3|obtainInfo"
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|install"
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:pkg:blee3|obtainInfo>> [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|install>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(defun b:pkgsProfile:pkg:blee3|obtainInfo (
-;;;#+END:
-                                           <pkgsProfileName <pkgName)
-   " #+begin_org
-** DocStr: **<pkgsProfileName** ignored for now. Return keyword list for *<pkgName*
-#+end_org "
-   (b:pkgsProfile:pkg|obtainInfo 'b:pkgsProfile:blee3:all <pkgName))
-
-(orgCmntBegin "
-** Basic Usage:
-#+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:pkg|obtainInfo 'doom:3.0.0.alpha 'add-node-modules-path)
-#+END_SRC
-
-#+RESULTS:
-| :repoUrl | https://github.com/codesuki/add-node-modules-path.git | :commit | 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6 |
-
-" orgCmntEnd)
-
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:pkg:straight|install"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:pkg:straight|install>> [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-(defun b:pkgsProfile:pkg:straight|install (
+(defun b:pkg:straight|install (
 ;;;#+END:
                                            <pkgsProfileSymbol <pkgName &optional <ref)
    " #+begin_org
-** DocStr: *<pkgsProfileName* ignored for now. *<pkgName* is installed through straight.
+** TODO DocStr: First try anyProfileInstall, if that fails, try recordInstall.
 #+end_org "
   (let* (
          ($profilePkgRef (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
@@ -286,7 +160,41 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
              :repo \"package/repo\"
              :ref \"hashofthepackagewherethebugdidn'toccurr\"))
 
-** Basic Usage:
+** TODO Basic Usage: INCOMPLETE
+#+BEGIN_SRC emacs-lisp
+(b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
+#+END_SRC
+
+#+RESULTS:
+: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
+
+" orgCmntEnd)
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|recordInstall"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|recordInstall>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkg:straight|recordInstall (
+;;;#+END:
+                                           <pkgsProfileSymbol <pkgName &optional <ref)
+   " #+begin_org
+** TODO DocStr: INCOMPLETE. Install an record.
+#+end_org "
+  (let* (
+         ($profilePkgRef (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
+         )
+    (message "straight-use-package with profileName, pkgName and commitHash comes here.")
+     ))
+
+
+(orgCmntBegin "
+(use-package some-package-with-bug-in-recent-commits
+  :straight (:host github
+             :repo \"package/repo\"
+             :ref \"hashofthepackagewherethebugdidn'toccurr\"))
+
+** TODO Basic Usage: INCOMPLETE
 #+BEGIN_SRC emacs-lisp
 (b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
 #+END_SRC
@@ -298,6 +206,99 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 
 
 
+;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkg:straight:explicit|install"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkg:straight:explicit|install>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(cl-defun b:pkg:straight:explicit|install (
+;;;#+END:
+                                          <pkgName
+                                          &key
+                                          (ref nil)
+                                          (pkgsProfileSymbol nil)
+                                          )
+   " #+begin_org
+** DocStr: Explicitly install a package with straight, but this does not apply to its dependencies.
+Things can become complicated with named-pkgs-profile.
+#+end_org "
+   (let* (
+          (<ref ref)
+          (<pkgsProfileSymbol pkgsProfileSymbol)
+          ($origCurProfile straight-current-profile)
+          ($result)
+          )
+     (unless <ref (error "<ref if mandatory") (cl-return nil)) ;;; Mandatory kw-arg
+
+     (setq pkg:straight:explicit:info '())
+     (push '(<pkgName . <ref) pkg:straight:explicit:info)
+
+     (advice-remove 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
+     (advice-add 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
+
+     (when <pkgsProfileSymbol
+       (setq straight-current-profile <pkgsProfileSymbol))
+
+     ;; Install the package if needed
+     (setq $result (straight-use-pkg <pkgName))
+
+     ;; Restore things back to normal
+     (advice-remove 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
+     (setq straight-current-profile $origCurProfile)
+     $result))
+
+
+
+(orgCmntBegin "
+(use-package some-package-with-bug-in-recent-commits
+  :straight (:host github
+             :repo \"package/repo\"
+             :ref \"hashofthepackagewherethebugdidn'toccurr\"))
+
+** TODO Basic Usage: INCOMPLETE
+#+BEGIN_SRC emacs-lisp
+(b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
+#+END_SRC
+
+#+RESULTS:
+: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
+
+" orgCmntEnd)
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|ephemeraInstall"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|ephemeraInstall>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkg:straight|ephemeraInstall (
+;;;#+END:
+                                           <pkgsProfileSymbol <pkgName &optional <ref)
+   " #+begin_org
+** TODO DocStr: INCOMPLETE. Install an record.
+#+end_org "
+  (let* (
+         ($profilePkgRef (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
+         )
+    (message "straight-use-package with profileName, pkgName and commitHash comes here.")
+     ))
+
+
+(orgCmntBegin "
+(use-package some-package-with-bug-in-recent-commits
+  :straight (:host github
+             :repo \"package/repo\"
+             :ref \"hashofthepackagewherethebugdidn'toccurr\"))
+
+** TODO Basic Usage: INCOMPLETE
+#+BEGIN_SRC emacs-lisp
+(b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
+#+END_SRC
+
+#+RESULTS:
+: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
+
+" orgCmntEnd)
+
+
 ;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|profiledInstall"
 (orgCmntBegin "
 * [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|profiledInstall>> [[elisp:(org-shifttab)][<)]] E|
@@ -306,11 +307,10 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 ;;;#+END:
                                        <pkgName)
    " #+begin_org
-** DocStr: Using the default pkgsProfileName, install *<pkgName* with straight.
+** TODO DocStr: Based on a default? Using the default pkgsProfileName, install *<pkgName* with straight.
 #+end_org "
    (b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha <pkgName)
    )
-
 
 (orgCmntBegin "
 ** Basic Usage:
@@ -322,6 +322,75 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 : 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
 
 " orgCmntEnd)
+
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight:anyProfile|isIn?"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight:anyProfile|isIn?>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkg:straight:anyProfile|isIn? (
+;;;#+END:
+                                        <pkgName <pkgsProfilesList)
+   " #+begin_org
+** DocStr: Find *<pkgName* in any of *<pkgsProfilesList*, return that profile when found. nil otherwise.
+#+end_org "
+   (let* (
+          ($pkgsList)
+          ($pkgInfo)
+          ($result nil)
+         )
+     (loop-for-each  $profileSymb <pkgsProfilesList
+       (setq $pkgsList (get $profileSymb ':pkgsList))
+       (setq $pkgInfo (assoc <pkgName $pkgsList))
+       (when $pkgInfo
+         (setq $result $profileSymb)
+         (loop-break)))
+     $result))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkg:straight|anyProfiledInstall b:pkgsProfile:blee3:all \"add-node-modules-path\")
+#+END_SRC
+
+#+RESULTS:
+: b:pkgsProfile:blee3:doom3
+
+" orgCmntEnd)
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|anyProfile:install"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|anyProfile:install>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkg:straight|anyProfile:install (
+;;;#+END:
+                                          <pkgName <pkgsProfilesList)
+   " #+begin_org
+** TODO DocStr: Based on a default? Using the default pkgsProfileName, install *<pkgName* with straight.
+#+end_org "
+   (let* (
+          ($pkgsProfile (b:pkg:straight:anyProfile|isIn? <pkgName <pkgsProfilesList))
+          ($result nil)
+          )
+     (if $pkgsProfile
+         (setq $result (b:pkg:straight|profiledInstall <pkgName <pkgsProfilesList))
+       (message "<pkgName not found in any")
+       )
+     $result))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkg:straight|anyProfiledInstall b:pkgsProfile:blee3:all \"add-node-modules-path\")
+#+END_SRC
+
+#+RESULTS:
+: b:pkgsProfile:blee3:doom3
+
+" orgCmntEnd)
+
 
 
 ;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|latestInstall"
@@ -362,7 +431,6 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
    (message "NOTYET")
    )
 
-
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
@@ -371,39 +439,6 @@ Each pkgs information is stored as a symbol property of b:pkgsProfile:doom:3.0.0
 
 #+RESULTS:
 : NOTYET
-
-" orgCmntEnd)
-
-
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:doom:pkgs:pinned|writeList"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:doom:pkgs:pinned|writeList>> [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-(defun b:doom:pkgs:pinned|writeList (
-;;;#+END:
-                                     <fileName)
-   " #+begin_org
-** DocStr: Actions based on =parameters= and *returnValues*
-and side-effects are documented here
-#+end_org "
-   (with-temp-file
-     <fileName
-     (progn
-       (insert ";; Auto generated, do not hand edit.\n")
-       (insert "'(\n")
-       (dolist ($each (doom-package-pinned-list))
-         (insert (format "  %s\n" $each)))
-       (insert ")\n"))))
-
-
-(orgCmntBegin "
-** Basic Usage:
-#+BEGIN_SRC emacs-lisp
-(b:doom:pkgs:pinned|writeList b:pkgsProfile:blee3:doom3)
-#+END_SRC
-
-#+RESULTS:
 
 " orgCmntEnd)
 
@@ -421,7 +456,7 @@ A combined pinned-list of packages is added to the original list.
 The original straight--lockfile-read-all comes first.
 #+end_org "
    (append (apply <origFunc <args) ; lockfiles still take priority
-           (b:pkgsProfile:blee3|pinnedListAll)))
+           pkg:straight:explicit:info))
 
 (orgCmntBegin "
 ** Basic Usage:
@@ -430,16 +465,18 @@ The original straight--lockfile-read-all comes first.
 #+END_SRC
 " orgCmntEnd)
 
+
 ;;;#+BEGIN:  b:elisp:defs/advice-add :symbol "straight--lockfile-read-all" :where "around" :function "b:pkgsProfile:blee3+:straight--lockfile-read-all|advice"
 (orgCmntBegin "
 * [[elisp:(show-all)][(>]]  =advice-add=  symbol=straight--lockfile-read-all where=around function=[[b:pkgsProfile:blee3+:straight--lockfile-read-all|advice]] [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(advice-add 'straight--lockfile-read-all :around #'b:pkgsProfile:blee3+:straight--lockfile-read-all|advice)
+
 ;;;#+END:
 
 ;;; (straight--lockfile-read-all)
 
 ;;; (straight-use-package 'emms) (straight-use-package 'pyvenv) (straight-use-package 'avy) (straight-use-package 'tide)
+
 
 ;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:blee3|pinnedListAll"
 (orgCmntBegin "
@@ -458,7 +495,7 @@ The original straight--lockfile-read-all comes first.
      ;;(dolist ($eachFile b:pkgsProfile:blee3:allSansDoom3)
      (dolist ($profileSymb b:pkgsProfile:blee3:all)
        (message (format "Preparation Of :: %s" $profileSymb))
-       (b:pkgsProfile:blee3:read|prepare $profileSymb)
+       (b:pkgsProfile:file:read|prepare $profileSymb)
        (setq $result (append $result (get $profileSymb ':pkgsList)))
        )
      $result))
@@ -471,8 +508,11 @@ The original straight--lockfile-read-all comes first.
 #+END_SRC
 " orgCmntEnd)
 
+
+
+
 ;;;#+BEGIN: b:elisp:file/provide :modName nil
-(provide 'doom-pkgs-profile)
+(provide 'pkgs-profile)
 ;;;#+END:
 
 ;;;#+BEGIN: b:elisp:file/endOf :outLevel 1
