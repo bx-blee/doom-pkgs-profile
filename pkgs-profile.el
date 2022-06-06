@@ -71,6 +71,25 @@
 #+end_org "
   )
 
+
+(defvar b:pkgsProfile:orphan
+  nil
+  " #+begin_org
+** =b:pkgsProfile:orphan= Used to record orphan packages. These have not been assigned a profile
+and don't have a commitHash.
+#+end_org "
+  )
+
+
+(defvar b:pkgsProfile:list:default
+  `(
+    )
+   " #+begin_org
+** =b:pkgsProfile:list:default= list of packages and their versions.
+#+end_org "
+  )
+
+
 ;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "Blee Package Information" :extraInfo "Canonical -- OBSOLETED"
 (orgCmntBegin "
 * [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _Blee Package Information_: |]]  Canonical -- OBSOLETED  [[elisp:(org-shifttab)][<)]] E|
@@ -108,6 +127,38 @@
 
 " orgCmntEnd)
 
+
+
+;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkgsProfile:list|prepare"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkgsProfile:list|prepare>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(cl-defun b:pkgsProfile:list|prepare (
+;;;#+END:
+                                      &optional <pkgsProfilesList)
+   " #+begin_org
+** TODO DocStr: First try anyProfileInstall, if that fails, try recordInstall.
+#+end_org "
+  (let* (
+         ($pkgsProfilesList <pkgsProfilesList)
+         )
+    (unless $pkgsProfilesList (setq $pkgsProfilesList b:pkgsProfile:list:default))
+    (unless $pkgsProfilesList (error "Missing pkgsProfilesList") (cl-return nil))
+
+    (loop-for-each  $profileSymb $pkgsProfilesList
+      (b:pkgsProfile:file:read|prepare $profileSymb))))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(progn (setq b:pkgsProfile:list:default b:pkgsProfile:blee3:all) (b:pkgsProfile:list|prepare))
+#+END_SRC
+
+#+RESULTS:
+
+" orgCmntEnd)
+
+
 ;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:pkg|obtainInfo"
 (orgCmntBegin "
 * [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:pkg|obtainInfo>> [[elisp:(org-shifttab)][<)]] E|
@@ -137,21 +188,35 @@ Type of *<pkgName* is a string.
 
 " orgCmntEnd)
 
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|install"
+;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkg:straight|install"
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|install>> [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkg:straight|install>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(defun b:pkg:straight|install (
+(cl-defun b:pkg:straight|install (
 ;;;#+END:
-                                           <pkgsProfileSymbol <pkgName &optional <ref)
+                                  <pkgSymb &optional <pkgsProfilesList)
    " #+begin_org
 ** TODO DocStr: First try anyProfileInstall, if that fails, try recordInstall.
 #+end_org "
   (let* (
-         ($profilePkgRef (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
+         ($pkgsProfilesList <pkgsProfilesList)
+         ($pkgName (symbol-name <pkgSymb))
+         ($result nil)
+         ($pkgsProfile)
          )
-    (message "straight-use-package with profileName, pkgName and commitHash comes here.")
-     ))
+    (unless $pkgsProfilesList (setq $pkgsProfilesList b:pkgsProfile:list:default))
+    (unless $pkgsProfilesList (error "Missing pkgsProfilesList") (cl-return nil))
+
+    (setq $pkgsProfile (b:pkg:straight:anyProfile|isIn? $pkgName $pkgsProfilesList))
+
+    (if $pkgsProfile
+        (progn
+         (setq $result (b:pkg:straight|profiledInstall <pkgSymb $pkgsProfile)))
+      (progn
+        (message (format "pkg=%s not found in anyProfile." $pkgName))
+        (b:pkg:straight|orphanInstall <pkgSymb)
+        )
+     )))
 
 
 (orgCmntBegin "
@@ -171,21 +236,23 @@ Type of *<pkgName* is a string.
 " orgCmntEnd)
 
 
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|recordInstall"
+;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkg:straight|orphanInstall"
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|recordInstall>> [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkg:straight|orphanInstall>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(defun b:pkg:straight|recordInstall (
+(cl-defun b:pkg:straight|orphanInstall (
 ;;;#+END:
-                                           <pkgsProfileSymbol <pkgName &optional <ref)
+                                        <pkgSymb)
    " #+begin_org
-** TODO DocStr: INCOMPLETE. Install an record.
+** TODO DocStr: Install an record the installation, so that it can be included in a profile.
 #+end_org "
   (let* (
-         ($profilePkgRef (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
+         ($pkgName (symbol-name <pkgSymb))
+         ($result nil)
          )
-    (message "straight-use-package with profileName, pkgName and commitHash comes here.")
-     ))
+    (unless b:pkgsProfile:orphan (error "Missing b:pkgsProfile:orphan") (cl-return nil))
+
+    (setq $result (b:pkg:straight|profiledInstall <pkgSymb b:pkgsProfile:orphan))))
 
 
 (orgCmntBegin "
@@ -224,10 +291,11 @@ Things can become complicated with named-pkgs-profile.
    (let* (
           (<ref ref)
           (<pkgsProfileSymbol pkgsProfileSymbol)
+          ($profileName (get <pkgsProfileSymbol ':profileName))
           ($origCurProfile straight-current-profile)
           ($result)
           )
-     (unless <ref (error "<ref if mandatory") (cl-return nil)) ;;; Mandatory kw-arg
+     (unless <ref (error "<ref is mandatory") (cl-return nil)) ;;; Mandatory kw-arg
 
      (setq pkg:straight:explicit:info '())
      (push '(<pkgName . <ref) pkg:straight:explicit:info)
@@ -235,13 +303,13 @@ Things can become complicated with named-pkgs-profile.
      (advice-remove 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
      (advice-add 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
 
-     (when <pkgsProfileSymbol
-       (setq straight-current-profile <pkgsProfileSymbol))
+     (when $profileName
+       (setq straight-current-profile $profileName))
 
      ;; Install the package if needed
      (setq $result (straight-use-pkg <pkgName))
 
-     ;; Restore things back to normal
+     ;; Restore things back to how they were
      (advice-remove 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
      (setq straight-current-profile $origCurProfile)
      $result))
@@ -299,23 +367,42 @@ Things can become complicated with named-pkgs-profile.
 " orgCmntEnd)
 
 
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:straight|profiledInstall"
+;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkg:straight|profiledInstall"
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkg:straight|profiledInstall>> [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkg:straight|profiledInstall>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(defun b:pkg:straight|profiledInstall (
+(cl-defun b:pkg:straight|profiledInstall (
 ;;;#+END:
-                                       <pkgName)
+                                          <pkgSymb <pkgsProfileSymbol)
    " #+begin_org
 ** TODO DocStr: Based on a default? Using the default pkgsProfileName, install *<pkgName* with straight.
 #+end_org "
-   (b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha <pkgName)
-   )
+   (let* (
+          ($pkgName (symbol-name <pkgSymb))
+          ;;($profileName (get (eval <pkgsProfileSymbol) ':profileName))
+          ($profileName (get <pkgsProfileSymbol ':profileName))	  
+          ($origCurProfile straight-current-profile)
+          ($result nil)
+          )
+     (unless $profileName (error "$profileName is mandatory") (cl-return nil))
+
+     (when $profileName
+       (setq straight-current-profile $profileName))
+
+     ;; Install the package if needed
+     (message (format "b:pkg:straight|profiledInstall pkg=%s profile=%s" $pkgName $profileName))
+     (setq $result (straight-use-package <pkgSymb))
+
+     ;; Restore things back to normal
+     (setq straight-current-profile $origCurProfile)
+     $result))
+
 
 (orgCmntBegin "
 ** Basic Usage:
+(get 'b:pkgsProfile:blee3:doom3 ':profileName)
 #+BEGIN_SRC emacs-lisp
-(b:pkg:straight|profiledInstall 'add-node-modules-path)
+(b:pkg:straight|profiledInstall 'add-node-modules-path 'b:pkgsProfile:blee3:doom3)
 #+END_SRC
 
 #+RESULTS:
@@ -342,6 +429,8 @@ Things can become complicated with named-pkgs-profile.
          )
      (loop-for-each  $profileSymb <pkgsProfilesList
        (setq $pkgsList (get $profileSymb ':pkgsList))
+       (unless $pkgsList (loop-break))
+       ;;(message (format "Processing %s" $profileSymb))
        (setq $pkgInfo (assoc <pkgName $pkgsList))
        (when $pkgInfo
          (setq $result $profileSymb)
@@ -351,7 +440,8 @@ Things can become complicated with named-pkgs-profile.
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkg:straight|anyProfiledInstall b:pkgsProfile:blee3:all \"add-node-modules-path\")
+;;; (get 'b:pkgsProfile:blee3:doom3 ':pkgsList)
+(b:pkg:straight:anyProfile|isIn? (symbol-name 'add-node-modules-path) b:pkgsProfile:blee3:all)
 #+END_SRC
 
 #+RESULTS:
@@ -375,15 +465,15 @@ Things can become complicated with named-pkgs-profile.
           ($result nil)
           )
      (if $pkgsProfile
-         (setq $result (b:pkg:straight|profiledInstall <pkgName <pkgsProfilesList))
-       (message "<pkgName not found in any")
+         (setq $result (b:pkg:straight|profiledInstall <pkgName $pkgsProfile))
+       (message "<pkgName not found in anyProfile.")
        )
      $result))
 
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkg:straight|anyProfiledInstall b:pkgsProfile:blee3:all \"add-node-modules-path\")
+(b:pkg:straight|anyProfile:install (symbol-name 'add-node-modules-path) b:pkgsProfile:blee3:all)
 #+END_SRC
 
 #+RESULTS:
@@ -476,38 +566,6 @@ The original straight--lockfile-read-all comes first.
 ;;; (straight--lockfile-read-all)
 
 ;;; (straight-use-package 'emms) (straight-use-package 'pyvenv) (straight-use-package 'avy) (straight-use-package 'tide)
-
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:blee3|pinnedListAll"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:blee3|pinnedListAll>> [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-(defun b:pkgsProfile:blee3|pinnedListAll (
-;;;#+END:
-                                          )
-   " #+begin_org
-** DocStr: Based on contents of /bisos/blee/profile/blee3 read all relevant files and convert to list.
-#+end_org "
-   (let* (
-          ($pkgsListIntake)
-          ($result ())
-         )
-     ;;(dolist ($eachFile b:pkgsProfile:blee3:allSansDoom3)
-     (dolist ($profileSymb b:pkgsProfile:blee3:all)
-       (message (format "Preparation Of :: %s" $profileSymb))
-       (b:pkgsProfile:file:read|prepare $profileSymb)
-       (setq $result (append $result (get $profileSymb ':pkgsList)))
-       )
-     $result))
-
-(orgCmntBegin "
-** Basic Usage:
-#+BEGIN_SRC emacs-lisp
-;; (get 'b:pkgsProfile:blee3:doom3 ':pkgsList)
-(b:pkgsProfile:blee3|pinnedListAll)
-#+END_SRC
-" orgCmntEnd)
-
 
 
 
