@@ -1,33 +1,86 @@
 
 #+TITLE: pkgs-profile
 
-pkgs-profile is a general purpose package that creates a consistent set of
-pinned packages based on their commitHash.
+=pkgs-profile= is a general purpose profiles-manager that facilitates
+installation of a consistent set of
+pinned packages based on their commitHash through straight.el.
 
-straight pkg installs go through pkgs-profile as a result the set remains
+* Summary
+
+=pkgs-profile= sits on top of =straight.el= and ~straight-use-package~ and
+installs packages that are pre-specified at a desired commitHash and labeled
+with a =pkgsProfileName= through straight's ~straight-current-profile~
+machinary.
+
+The full consistent set of
+pinned packages prefixed with *b:pkgsProfile:collection:* is passed to
+straight through an ~advice-add~  around ~straight--lockfile-read-all~
+
+Based on this, straight package installs are managed with =pkgs-profile= and as a result the set remains
 consistent and stable.
 
-* Doom Packages Profile -- For Use Outside Of Doom
+The complete set of consitent packages is specified as a list of tupples (alist) in the form of
+(pkgName . commitHash) consistent with the type of the result of ~(straight--lockfile-read-all)~.
 
-Doom is many things.
+Each b:pkgsProfile:<setName>:<subSet> is such an alist. =blee3:pkgs-profile=
+(https://github.com/bx-blee/blee3-pkgs-profile) emacs package uses
+=pkgs-profile= through specification of  *b:pkgsProfile:collection:*.
 
-One of those is that of a consistent and stable set of packages as a profile.
+In this case, =blee3:pkgs-profile= sits on top of =pkgs-profile= which sits on top of =straight.el=.
 
-Such a packages profile can now also be used outside of Doom.
+=blee3:pkgs-profile= binds itself to  =pkgs-profile=, through:
+#+begin_src emacs-lisp
+   (setq b:pkgsProfile:collection:default b:pkgsProfile:collection:blee3)
+   (setq b:pkgsProfile:orphan 'b:pkgsProfile:blee3:orphan)
+   (b:pkgsProfile:collection|prepare)
+   (b:pkgsProfile:collection:straight--lockfile-read-all|advice-add)
+#+end_src
 
-* Extraction Of Packages From Doom
+There after, a given package at a specific commitHash which is specified in one of the
+*b:pkgsProfile:blee3:* profiles included in *b:pkgsProfile:collection:blee3* collection
+can very conveniently be installed, like so:
+#+begin_src emacs-lisp
+(straight-use-package 'packageName)
+#+end_src
 
-** Clone All Doom Packages
+This results in obataining
 
-- Enable all packages
-- Doom install
-- clone all packages
+In terms of parallels between emacs's this packaging model and debian's
+packaging model one can consider:
 
-** /bisos/core/bsip/bin/doomPkgsProfile.sh Walks Through Cloned Packages And Creates Packages list
+| Debian Apt Model                           | Emacs-pkgs-profile Model         |
+| dpkg                                       | straight                         |
+| apt                                        | pkgs-profile + straight          |
+| /etc/apt/sources.list                      | b:pkgsProfile:collection:default |
+| deb http://deb.debian.org/debian/ bullseye | blee3:pkgs-profile               |
 
-* Packages List -- Kept At /bisos/blee/profiles/doom/doom-3.0.0-alpha.el
-And also at ./profiles//doom-3.0.0-alpha.el
+Emacs' packaging model has not been well thought through.
+=pkgs-profile= is an attempt at evolving that model.
+https://github.com/bx-blee
+=straight.el= also introduces the concept of profiles. But the concept of
+b:packagesProfile:<set> is different from that of straight's.
+We use ~(straight-freeze-versions)~ and the resulting ~/versions/file.el~
+for verification and development of b:pkgsProfile:collection.
 
-* b:profiles:doom:3.0.0-alpha  is a list of all packages and their versions
+* About pkgs-profile, blee3-pkgs-profile, Blee, BISOS and ByStar
 
-* (b:straight:profile|install profile pkgName)
+pkgs-profile and blee3-pkgs-profile are part of Blee (BISOS, Libre-Halaal Emacs Environment).
+https://github.com/bx-blee
+
+Blee is integrated with BISOS --- (The Universal BISOS: ByStar Internet Services Operating System)
+http://www.by-star.net/PLPC/180047
+
+BISOS facilitates development of The Libre-Halaal By* (ByStar) Digital Ecosystem.
+ByStar is a unified and non-proprietary, autonomy and privacy oriented digital ecosystem.
+http://www.by-star.net/
+
+So, it is an understatement to say that =pkgs-profile= is part of a much bigger picture.
+
+The broader domain of =pkgs-profile= is that of a "Git Oriented Profiles Packages Management Framework"
+
+* BISOS & Blee's Git Oriented Profiled Packages Management Framework
+
+Picture comes here and we walk through it.
+
+** Key Concepts:
+
