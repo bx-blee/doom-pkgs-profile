@@ -47,27 +47,10 @@
 " orgCmntEnd)
 ;;;#+END:
 
-(defvar pkg:straight:explicit:info
+(defvar pkg:straight:explicit:specification
   '()
    " #+begin_org
-** =b:pkgsProfile:frmWrk:example= list of  packages and their versions.
-#+end_org "
-  )
-
-
-(defvar b:pkgsProfile:frmWrk:example "./profiles/frmWrkExample-pkgsProfile.el"
-   " #+begin_org
-** =b:pkgsProfile:frmWrk:example= list of  packages and their versions.
-#+end_org "
-  )
-(put 'b:pkgsProfile:frmWrk:example ':profileName "frmWrk:example")
-
-(defvar b:pkgsProfile:frmWrkExample:all
-  `(
-    b:pkgsProfile:frmWrk:example
-    )
-   " #+begin_org
-** =b:pkgsProfile:frmWrkExample:all= list of packages and their versions.
+** TODO INCOMPLETE -- =pkg:straight:explicit:specification= One package's pkgName & commitHash for an explicit straight use package.
 #+end_org "
   )
 
@@ -80,19 +63,18 @@ and don't have a commitHash.
 #+end_org "
   )
 
-
-(defvar b:pkgsProfile:list:default
+(defvar b:pkgsProfile:collection:default
   `(
     )
    " #+begin_org
-** =b:pkgsProfile:list:default= list of packages and their versions.
+** =b:pkgsProfile:collection:default= list of packages and their versions.
 #+end_org "
   )
 
 
-;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "Blee Package Information" :extraInfo "Canonical -- OBSOLETED"
+;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "b:pkgsProfile:" :extraInfo ""
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _Blee Package Information_: |]]  Canonical -- OBSOLETED  [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _b:pkgsProfile:_: |]]    [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
 ;;;#+END:
 
@@ -104,7 +86,7 @@ and don't have a commitHash.
 ;;;#+END:
                                          <pkgsProfileSymbol)
    " #+begin_org
-** DocStr: Read from *<pkgsProfileSymbol* file and capture that as ~:pkgsList~ property list.
+** DocStr: Read from *<pkgsProfileSymbol* file and capture that as ~:pkgsList~ symbol property.
 #+end_org "
    (let* (
           ($pkgsProfile (eval <pkgsProfileSymbol))
@@ -120,7 +102,7 @@ and don't have a commitHash.
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:file:read|prepare 'b:pkgsProfile:frmWrk:example)
+(b:pkgsProfile:file:read|prepare 'b:pkgsProfile:blee3:native)
 #+END_SRC
 
 #+RESULTS:
@@ -128,30 +110,45 @@ and don't have a commitHash.
 " orgCmntEnd)
 
 
-
-;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkgsProfile:list|prepare"
+;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkgsProfile:collection|prepare"
 (orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkgsProfile:list|prepare>> [[elisp:(org-shifttab)][<)]] E|
+* [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkgsProfile:collection|prepare>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(cl-defun b:pkgsProfile:list|prepare (
+(cl-defun b:pkgsProfile:collection|prepare (
 ;;;#+END:
-                                      &optional <pkgsProfilesList)
+                                            &optional <pkgsProfilesCollection)
    " #+begin_org
-** TODO DocStr: First try anyProfileInstall, if that fails, try recordInstall.
+** DocStr: Prepare and initialize the given *<pkgsProfilesCollection* or *b:pkgsProfile:collection:default*.
+Walk through the pkgsProfiles of specified collection and read them in and add them to ~straight-profiles~.
 #+end_org "
   (let* (
-         ($pkgsProfilesList <pkgsProfilesList)
+         ($pkgsProfilesCollection <pkgsProfilesCollection)
+         ($profileName)
+         ($profileSymb)
          )
-    (unless $pkgsProfilesList (setq $pkgsProfilesList b:pkgsProfile:list:default))
-    (unless $pkgsProfilesList (error "Missing pkgsProfilesList") (cl-return nil))
+    (unless $pkgsProfilesCollection (setq $pkgsProfilesCollection b:pkgsProfile:collection:default))
+    (unless $pkgsProfilesCollection (error "Missing pkgsProfilesCollection") (cl-return nil))
 
-    (loop-for-each  $profileSymb $pkgsProfilesList
-      (b:pkgsProfile:file:read|prepare $profileSymb))))
+    (loop-for-each  $profileSymb $pkgsProfilesCollection
+        (b:pkgsProfile:file:read|prepare $profileSymb)
+        (setq $profileName (get $profileSymb ':profileName))
+        (setq $profileNameSymb (intern $profileName))
+        (add-to-list
+         'straight-profiles
+         `(,$profileNameSymb . ,(s-lex-format "${$profileName}.el"))
+         t))
+    ;;; Next we initialize orphan profile for those not found above.
+    (setq $profileName (get b:pkgsProfile:orphan ':profileName))
+    (setq $profileNameSymb (intern $profileName))
+    (add-to-list
+     'straight-profiles
+         `(,$profileNameSymb . ,(s-lex-format "${$profileName}.el"))
+         t)))
 
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(progn (setq b:pkgsProfile:list:default b:pkgsProfile:blee3:all) (b:pkgsProfile:list|prepare))
+(progn (setq b:pkgsProfile:collection:default b:pkgsProfile:blee3:all) (b:pkgsProfile:list|prepare))
 #+END_SRC
 
 #+RESULTS:
@@ -167,8 +164,8 @@ and don't have a commitHash.
 ;;;#+END:
                                      <pkgsProfileSymbol <pkgName)
    " #+begin_org
-** DocStr: Given *<pkgsProfileSymbol* return info (commitHash) for *<pkgName*.
-Type of *<pkgName* is a string.
+** DocStr: Given *<pkgsProfileSymbol* return info for *<pkgName*.
+Type of *<pkgName* is a string. The returned info is the commitHash associated with *<pkgName*.
 #+end_org "
    (let* (
           ($pkgsList (get <pkgsProfileSymbol ':pkgsList))
@@ -188,26 +185,167 @@ Type of *<pkgName* is a string.
 
 " orgCmntEnd)
 
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:explicit:straight--lockfile-read-all|advice"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:explicit:straight--lockfile-read-all|advice>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkgsProfile:explicit:straight--lockfile-read-all|advice (
+;;;#+END:
+                                                                <origFunc &rest <args)
+   " #+begin_org
+** TODO INCOMPLET DocStr: This is the package specific special purpose around advice-add for straight--lockfile-read-all.
+The original straight--lockfile-read-all comes first. The ~pkg:straight:explicit:specification~ is added to it.
+#+end_org "
+   (append (apply <origFunc <args) ; lockfiles still take priority
+           pkg:straight:explicit:specification))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkgsProfile:blee3+:straight--lockfile-read-all|advice 'straight--lockfile-read-all)
+#+END_SRC
+" orgCmntEnd)
+
+
+;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "b:pkgsProfile:collection advice" :extraInfo "around straight--lockfile-read-all"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _b:pkgsProfile:collection advice_: |]]  b:pkgProfile on top of straight  [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+;;;#+END:
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:collection:straight--lockfile-read-all|advice"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:collection:straight--lockfile-read-all|advice>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkgsProfile:collection:straight--lockfile-read-all|advice (
+;;;#+END:
+                                                                <origFunc &rest <args)
+   " #+begin_org
+** DocStr: This is a special purpose around advice-add for straight--lockfile-read-all.
+A combined pinned-list of packages is added to the original list.
+The original straight--lockfile-read-all comes first.
+#+end_org "
+   (append
+    (apply <origFunc <args) ; lockfiles still take priority
+    (b:pkgsProfile:collection:straight|aggregate b:pkgsProfile:collection:default)))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkgsProfile:blee3+:straight--lockfile-read-all|advice 'straight--lockfile-read-all)
+#+END_SRC
+" orgCmntEnd)
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:collection:straight--lockfile-read-all|advice-add"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:collection:straight--lockfile-read-all|advice-add>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkgsProfile:collection:straight--lockfile-read-all|advice-add (
+;;;#+END:
+                                                                        )
+   " #+begin_org
+** DocStr: Actions based on =parameters= and *returnValues*
+and side-effects are documented here
+#+end_org "
+
+   (advice-add 'straight--lockfile-read-all :around #'b:pkgsProfile:collection:straight--lockfile-read-all|advice)
+   )
+
+;;; (straight--lockfile-read-all)
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkgs)
+#+END_SRC
+" orgCmntEnd)
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:collection:straight--lockfile-read-all|advice-remove"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:collection:straight--lockfile-read-all|advice-remove>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkgsProfile:collection:straight--lockfile-read-all|advice-remove (
+;;;#+END:
+                                                                           )
+   " #+begin_org
+** DocStr: Actions based on =parameters= and *returnValues*
+and side-effects are documented here
+#+end_org "
+
+   (advice-remove 'straight--lockfile-read-all :around #'b:pkgsProfile:collection:straight--lockfile-read-all|advice)
+   )
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkgs)
+#+END_SRC
+" orgCmntEnd)
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:collection:straight|aggregate"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:collection:straight|aggregate>> [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+(defun b:pkgsProfile:collection:straight|aggregate (
+;;;#+END:
+                                          <defaultCollection)
+   " #+begin_org
+** DocStr: Based on contents of /bisos/blee/profile/blee3 read all relevant files and convert to list.
+NOTYET, TO-BE-OPTIMIZED. this does not need to be computed everytime.
+#+end_org "
+   (let* (
+          ($pkgsListIntake)
+          ($result ())
+         )
+     (dolist ($profileSymb <defaultCollection)
+       (when (not (member ':pkgsList (symbol-plist $profileSymb)))
+         (message (format "Preparation Of :: %s" $profileSymb))
+         (b:pkgsProfile:file:read|prepare $profileSymb))
+       (setq $result (append $result (get $profileSymb ':pkgsList)))
+       )
+     $result))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+;; (get 'b:pkgsProfile:blee3:doom3 ':pkgsList)
+(b:pkgsProfile:blee3|pinnedListAll)
+#+END_SRC
+" orgCmntEnd)
+
+
+
+;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "b:pkg:straight" :extraInfo "b:pkgProfile on top of straight"
+(orgCmntBegin "
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _b:pkg:straight_: |]]  b:pkgProfile on top of straight  [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+;;;#+END:
+
+
 ;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkg:straight|install"
 (orgCmntBegin "
 * [[elisp:(show-all)][(>]]  =cl-defun= <<b:pkg:straight|install>> [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
 (cl-defun b:pkg:straight|install (
 ;;;#+END:
-                                  <pkgSymb &optional <pkgsProfilesList)
+                                  <pkgSymb &optional <pkgsProfilesCollection)
    " #+begin_org
-** TODO DocStr: First try anyProfileInstall, if that fails, try recordInstall.
+** TODO DocStr: For a given *<pkgSym* and perhaps a given *<pkgsProfilesCollection*, first try ~b:pkg:straight|profiledInstall~, if that fails, try ~b:pkg:straight|orphanInstall~.
+*b:pkg:straight|install* is the  =PRIMARY-USE-INTERFACE= of b:pkg:straight| set.
 #+end_org "
   (let* (
-         ($pkgsProfilesList <pkgsProfilesList)
+         ($pkgsProfilesCollection <pkgsProfilesCollection)
          ($pkgName (symbol-name <pkgSymb))
          ($result nil)
          ($pkgsProfile)
          )
-    (unless $pkgsProfilesList (setq $pkgsProfilesList b:pkgsProfile:list:default))
-    (unless $pkgsProfilesList (error "Missing pkgsProfilesList") (cl-return nil))
+    (unless $pkgsProfilesCollection (setq $pkgsProfilesCollection b:pkgsProfile:collection:default))
+    (unless $pkgsProfilesCollection (error "Missing pkgsProfilesCollection") (cl-return nil))
 
-    (setq $pkgsProfile (b:pkg:straight:anyProfile|isIn? $pkgName $pkgsProfilesList))
+    (setq $pkgsProfile (b:pkg:straight:anyProfile|isIn? $pkgName $pkgsProfilesCollection))
 
     (if $pkgsProfile
         (progn
@@ -220,18 +358,12 @@ Type of *<pkgName* is a string.
 
 
 (orgCmntBegin "
-(use-package some-package-with-bug-in-recent-commits
-  :straight (:host github
-             :repo \"package/repo\"
-             :ref \"hashofthepackagewherethebugdidn'toccurr\"))
-
-** TODO Basic Usage: INCOMPLETE
+** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
+(b:pkgs:straight|install 'add-node-modules-path)
 #+END_SRC
 
 #+RESULTS:
-: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
 
 " orgCmntEnd)
 
@@ -244,7 +376,8 @@ Type of *<pkgName* is a string.
 ;;;#+END:
                                         <pkgSymb)
    " #+begin_org
-** TODO DocStr: Install an record the installation, so that it can be included in a profile.
+** DocStr: For *<pkgSymb* with ~b:pkgsProfile:orphan~ profile, run ~b:pkg:straight|profiledInstall~.
+*** TODO The determinaltion that *<pkgSymb* is in fact orphan should perhaps be validated.
 #+end_org "
   (let* (
          ($pkgName (symbol-name <pkgSymb))
@@ -256,18 +389,12 @@ Type of *<pkgName* is a string.
 
 
 (orgCmntBegin "
-(use-package some-package-with-bug-in-recent-commits
-  :straight (:host github
-             :repo \"package/repo\"
-             :ref \"hashofthepackagewherethebugdidn'toccurr\"))
-
-** TODO Basic Usage: INCOMPLETE
+** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
+(b:pkg:straight|orphanInstall 'add-node-modules-path)
 #+END_SRC
 
 #+RESULTS:
-: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
 
 " orgCmntEnd)
 
@@ -285,8 +412,9 @@ Type of *<pkgName* is a string.
                                           (pkgsProfileSymbol nil)
                                           )
    " #+begin_org
-** DocStr: Explicitly install a package with straight, but this does not apply to its dependencies.
+** TODO INCOMPLETE DocStr: Explicitly install a package with straight, but this does not apply to its dependencies.
 Things can become complicated with named-pkgs-profile.
+*** TODO b:pkg:straight:explicit|install has not been implemented or tested yet.
 #+end_org "
    (let* (
           (<ref ref)
@@ -297,14 +425,19 @@ Things can become complicated with named-pkgs-profile.
           )
      (unless <ref (error "<ref is mandatory") (cl-return nil)) ;;; Mandatory kw-arg
 
-     (setq pkg:straight:explicit:info '())
-     (push '(<pkgName . <ref) pkg:straight:explicit:info)
+     (message "INCOMPLETE, skipped")
+     (cl-return nil)
+
+     ;;; NOT EXECUTED. Needs implementation and testing.
+
+     (setq pkg:straight:explicit:specification '())
+     (push '(<pkgName . <ref) pkg:straight:explicit:specification)
 
      (advice-remove 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
      (advice-add 'straight--lockfile-read-all :around #'b:straight--lockfile-read-all|advice)
 
      (when $profileName
-       (setq straight-current-profile $profileName))
+       (setq straight-current-profile (intern $profileName)))
 
      ;; Install the package if needed
      (setq $result (straight-use-pkg <pkgName))
@@ -317,18 +450,13 @@ Things can become complicated with named-pkgs-profile.
 
 
 (orgCmntBegin "
-(use-package some-package-with-bug-in-recent-commits
-  :straight (:host github
-             :repo \"package/repo\"
-             :ref \"hashofthepackagewherethebugdidn'toccurr\"))
-
 ** TODO Basic Usage: INCOMPLETE
 #+BEGIN_SRC emacs-lisp
 (b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
 #+END_SRC
 
 #+RESULTS:
-: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
+
 
 " orgCmntEnd)
 
@@ -341,28 +469,25 @@ Things can become complicated with named-pkgs-profile.
 ;;;#+END:
                                            <pkgsProfileSymbol <pkgName &optional <ref)
    " #+begin_org
-** TODO DocStr: INCOMPLETE. Install an record.
+** TODO DocStr: INCOMPLETE. Install but make sure it is orphan and that it remains orphan.
 #+end_org "
   (let* (
          ($profilePkgRef (b:pkgsProfile:pkg|obtainInfo <pkgsProfileName <pkgName))
          )
+    (message "INCOMPLETE, skipped")
+     (cl-return nil)
+
     (message "straight-use-package with profileName, pkgName and commitHash comes here.")
      ))
 
 
 (orgCmntBegin "
-(use-package some-package-with-bug-in-recent-commits
-  :straight (:host github
-             :repo \"package/repo\"
-             :ref \"hashofthepackagewherethebugdidn'toccurr\"))
-
 ** TODO Basic Usage: INCOMPLETE
 #+BEGIN_SRC emacs-lisp
 (b:pkgsProfile:pkg:straight|install 'doom:3.0.0.alpha 'add-node-modules-path)
 #+END_SRC
 
 #+RESULTS:
-: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
 
 " orgCmntEnd)
 
@@ -375,28 +500,24 @@ Things can become complicated with named-pkgs-profile.
 ;;;#+END:
                                           <pkgSymb <pkgsProfileSymbol)
    " #+begin_org
-** TODO DocStr: Based on a default? Using the default pkgsProfileName, install *<pkgName* with straight.
+** DocStr: Set ~straight-current-profile~ to *<pkgsProfileSymbol* and run ~straight-use-package~ with *<pkgSymb*.
+This is the primary function that invokes ~straight-use-package~.
 #+end_org "
    (let* (
           ($pkgName (symbol-name <pkgSymb))
-          ;;($profileName (get (eval <pkgsProfileSymbol) ':profileName))
-          ($profileName (get <pkgsProfileSymbol ':profileName))	  
-          ($origCurProfile straight-current-profile)
+          ($profileName (get <pkgsProfileSymbol ':profileName))
           ($result nil)
           )
      (unless $profileName (error "$profileName is mandatory") (cl-return nil))
 
-     (when $profileName
-       (setq straight-current-profile $profileName))
-
-     ;; Install the package if needed
-     (message (format "b:pkg:straight|profiledInstall pkg=%s profile=%s" $pkgName $profileName))
-     (setq $result (straight-use-package <pkgSymb))
-
-     ;; Restore things back to normal
-     (setq straight-current-profile $origCurProfile)
+     (let (
+           (straight-current-profile (intern $profileName))
+           )
+       ;; Install the package if needed
+       (message (format "b:pkg:straight|profiledInstall pkg=%s profile=%s" $pkgName $profileName))
+       (setq $result (straight-use-package <pkgSymb))
+       )
      $result))
-
 
 (orgCmntBegin "
 ** Basic Usage:
@@ -406,7 +527,6 @@ Things can become complicated with named-pkgs-profile.
 #+END_SRC
 
 #+RESULTS:
-: 5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6
 
 " orgCmntEnd)
 
@@ -456,12 +576,12 @@ Things can become complicated with named-pkgs-profile.
 " orgCmntEnd)
 (defun b:pkg:straight|anyProfile:install (
 ;;;#+END:
-                                          <pkgName <pkgsProfilesList)
+                                          <pkgName <pkgsProfilesCollection)
    " #+begin_org
-** TODO DocStr: Based on a default? Using the default pkgsProfileName, install *<pkgName* with straight.
+** TODO DocStr: If *<pkgName* is in any of *<pkgsProfilesCollection* install it. Otherwise, note that it was not found.
 #+end_org "
    (let* (
-          ($pkgsProfile (b:pkg:straight:anyProfile|isIn? <pkgName <pkgsProfilesList))
+          ($pkgsProfile (b:pkg:straight:anyProfile|isIn? <pkgName <pkgsProfilesCollection))
           ($result nil)
           )
      (if $pkgsProfile
@@ -491,7 +611,7 @@ Things can become complicated with named-pkgs-profile.
 ;;;#+END:
                                      <pkgName)
    " #+begin_org
-** DocStr: Using the default pkgsProfileName, install *<pkgName* with straight.
+** TODO NOT-IMPLEMENTED DocStr: Using the default pkgsProfileName, install *<pkgName* with straight.
 #+end_org "
    (message "NOTYET")
    )
@@ -532,40 +652,6 @@ Things can become complicated with named-pkgs-profile.
 
 " orgCmntEnd)
 
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkgsProfile:blee3+:straight--lockfile-read-all|advice"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =defun= <<b:pkgsProfile:blee3+:straight--lockfile-read-all|advice>> [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-(defun b:pkgsProfile:blee3+:straight--lockfile-read-all|advice (
-;;;#+END:
-                                                                <origFunc &rest <args)
-   " #+begin_org
-** DocStr: This is a special purpose around advice-add for straight--lockfile-read-all.
-A combined pinned-list of packages is added to the original list.
-The original straight--lockfile-read-all comes first.
-#+end_org "
-   (append (apply <origFunc <args) ; lockfiles still take priority
-           pkg:straight:explicit:info))
-
-(orgCmntBegin "
-** Basic Usage:
-#+BEGIN_SRC emacs-lisp
-(b:pkgsProfile:blee3+:straight--lockfile-read-all|advice 'straight--lockfile-read-all)
-#+END_SRC
-" orgCmntEnd)
-
-
-;;;#+BEGIN:  b:elisp:defs/advice-add :symbol "straight--lockfile-read-all" :where "around" :function "b:pkgsProfile:blee3+:straight--lockfile-read-all|advice"
-(orgCmntBegin "
-* [[elisp:(show-all)][(>]]  =advice-add=  symbol=straight--lockfile-read-all where=around function=[[b:pkgsProfile:blee3+:straight--lockfile-read-all|advice]] [[elisp:(org-shifttab)][<)]] E|
-" orgCmntEnd)
-
-;;;#+END:
-
-;;; (straight--lockfile-read-all)
-
-;;; (straight-use-package 'emms) (straight-use-package 'pyvenv) (straight-use-package 'avy) (straight-use-package 'tide)
 
 
 
