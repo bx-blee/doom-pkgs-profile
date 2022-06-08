@@ -80,7 +80,69 @@ The broader domain of =pkgs-profile= is that of a "Git Oriented Profiles Package
 
 * BISOS & Blee's Git Oriented Profiled Packages Management Framework
 
+Based on key experiences of the past two decades, and in particular the lessons
+learned from Debian's packaging system and uses of git as a version referenceable
+file system; certain expectations have evolved for packages management framework.
+
+** Key Expected Characteristics Of Profiled Package Management Frameworks
+
+The following characterisics are expected:
+
+- Provide a stable and reproducible environment based on specified profiles.
+- Allow for evolution of packages without impacting exisiting profiles.
+- Provision of mapping of all source and binary packages to git repos.
+- Universal reference to packages as git repos and commmitHashes --- allowing
+  for unofficial development and adoption of packages.
+- Convenient packaging standards.
+- Convenience in extending profiles.
+
+** Overview Of A Generalized  Profiled Packages Management Framework
+
 Picture comes here and we walk through it.
 
 ** Key Concepts:
 
+Refering to the above model and framework and in the specific context of Blee
+packages, we enumerate the following concepts.
+
+*** Profiles Aware Package Manager --- b:pkg:straight+straight.el
+
+We have evolved straight.el in a variety of ways so that it can properly
+function as a profiles aware package manager.
+
+At a minimum, we hope that straight.el developers would consider:
+
+- =pkgs-profile=  modification involve addition of ~advice-add~ around an internal function:
+~straight--lockfile-read-all~. This needs to be cleaned up and revisited.
+
+- Addition of :ref keyword as in https://github.com/radian-software/straight.el/issues/246
+needs to be revisited in light of =pkgs-profile=. How is :ref to deal with dependencies?
+In =pkgs-profile=, the :ref of the package and its dependencies are pre-specified.
+
+- Concept and purpose of straight-profiles and b:pkgsProfile: are different.
+These need to be aligned.
+
+- straight.el needs to provide needed interfaces to accept b:pkgsProfile:collection-s as input.
+
+*** Packages Profiles
+
+A list of package-names pinned at specific commitHash-s, which create consistent and stable sets.
+
+Similar to a line entry in /etc/apt/sources.list.
+
+*** Profiles Manager --- pkgs-profile As A Pure Layer On Top Of straight.el
+
+A "Profiles Manager" inputs profile collections to the "Profiles Aware Package Manager".
+
+Right now pkgs-profile and straight.el are somewhat intertwined.
+We should move towards
+
+*** <<Profiles Collections>>
+
+A list of Packages Profiles which aim to create a consistent and stable totality.
+
+Similar to the full /etc/apt/sources.list.
+
+*** Packages Selections
+
+a number of packages from the totality of [[Profiles Collections]].
