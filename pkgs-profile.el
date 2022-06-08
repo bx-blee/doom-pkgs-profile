@@ -71,7 +71,6 @@ and don't have a commitHash.
 #+end_org "
   )
 
-
 ;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "b:pkgsProfile:" :extraInfo ""
 (orgCmntBegin "
 * [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _b:pkgsProfile:_: |]]    [[elisp:(org-shifttab)][<)]] E|
@@ -349,7 +348,7 @@ NOTYET, TO-BE-OPTIMIZED. this does not need to be computed everytime.
 
     (if $pkgsProfile
         (progn
-         (setq $result (b:pkg:straight|profiledInstall <pkgSymb $pkgsProfile)))
+         (setq $result (b:pkg:straight|profiledInstall $pkgsProfile <pkgSymb)))
       (progn
         (message (format "pkg=%s not found in anyProfile." $pkgName))
         (b:pkg:straight|orphanInstall <pkgSymb)
@@ -385,7 +384,7 @@ NOTYET, TO-BE-OPTIMIZED. this does not need to be computed everytime.
          )
     (unless b:pkgsProfile:orphan (error "Missing b:pkgsProfile:orphan") (cl-return nil))
 
-    (setq $result (b:pkg:straight|profiledInstall <pkgSymb b:pkgsProfile:orphan))))
+    (setq $result (b:pkg:straight|profiledInstall b:pkgsProfile:orphan <pkgSymb))))
 
 
 (orgCmntBegin "
@@ -498,24 +497,31 @@ Things can become complicated with named-pkgs-profile.
 " orgCmntEnd)
 (cl-defun b:pkg:straight|profiledInstall (
 ;;;#+END:
-                                          <pkgSymb <pkgsProfileSymbol)
+                                          <pkgsProfileSymbol <straightArg &rest <straightOptArgs)
    " #+begin_org
 ** DocStr: Set ~straight-current-profile~ to *<pkgsProfileSymbol* and run ~straight-use-package~ with *<pkgSymb*.
 This is the primary function that invokes ~straight-use-package~.
 #+end_org "
    (let* (
-          ($pkgName (symbol-name <pkgSymb))
+          ($pkgName)
           ($profileName (get <pkgsProfileSymbol ':profileName))
           ($result nil)
           )
      (unless $profileName (error "$profileName is mandatory") (cl-return nil))
 
+     (if (listp <straightArg)
+         (setq $pkgName (symbol-name (cl-first <straightArg)))
+       (setq $pkgName (symbol-name <straightArg)))
+
      (let (
            (straight-current-profile (intern $profileName))
            )
        ;; Install the package if needed
-       (message (format "b:pkg:straight|profiledInstall pkg=%s profile=%s" $pkgName $profileName))
-       (setq $result (straight-use-package <pkgSymb))
+       (message (format "b:pkg:straight|profiledInstall profile=%s pkg=%s arg=%s optArgs=%s"
+                        $pkgName $profileName <straightArg <straightOptArgs))
+       (if <straightOptArgs
+           (setq $result (straight-use-package <straightArg <straightOptArgs))
+         (setq $result (straight-use-package <straightArg)))
        )
      $result))
 

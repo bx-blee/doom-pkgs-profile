@@ -98,19 +98,57 @@ The following characterisics are expected:
 
 ** Overview Of A Generalized  Profiled Packages Management Framework
 
-Picture comes here and we walk through it.
+Emacs packaging, packages and use of packages has been evolving in adhoc manner
+without a roadmap.
+
+
+Without such a roadmap, we could easily get lost and reinvent and diverge.
+To some extent that (getting lost) has already happened. Some symptoms are visible.
+
+- package.el (the built-in package manager in emacs) has proven to be a dead-end.
+
+- ELPA (Emacs Lisp Package Archive) is no longer all that relevant. Why should
+  there be an official one? Diversity of ad-hoc packages is great and quality
+  control, rating, indexing and publishing are all better done outside of the
+  emacs substrate organization anyway.
+
+- straight.el as a replacement for package.el is conflicted in the scope that it should cover.
+
+- use-package hardly knows its place. Is it really necessary? It does not address the concept of
+  profiles. Then leaf.el does more of the same.
+  Neither of these deal with the concept of realm extensions.
+
+- Then come the likes of doom which address the profiling concept, but just for
+  themselves and not as a general solution.
+
+So, in Blee and in pkgs-profile, in order to deal with these symptoms, we first
+focus on concepts, layering and scopes --- in a practical, pragmatic and tangible way.
+We do so, primarily in the context of Blee. But everything is generalized enough to
+also be used outside of Blee.
+
+First we introduce the bigger picture, then we walk through its key concepts.
+
+*** TODO Picture comes here and we walk through it.
 
 ** Key Concepts:
 
 Refering to the above model and framework and in the specific context of Blee
 packages, we enumerate the following concepts.
 
+The above picture and the below concept descriptios establish a model and terminology
+that can provide for a roadmap.
+
+
 *** Profiles Aware Package Manager --- b:pkg:straight+straight.el
 
-We have evolved straight.el in a variety of ways so that it can properly
-function as a profiles aware package manager.
+First, we disable the built-in emacs packages manager.
 
-At a minimum, we hope that straight.el developers would consider:
+Instaed of the built-in package.el, we have evolved straight.el on its fringes
+in a variety of ways so that it can properly function as a profiles aware
+package manager.
+
+We offer these conceptual evolutions, to straight.el. At a minimum, we hope that
+straight.el developers would consider:
 
 - =pkgs-profile=  modification involve addition of ~advice-add~ around an internal function:
 ~straight--lockfile-read-all~. This needs to be cleaned up and revisited.
@@ -143,6 +181,34 @@ A list of Packages Profiles which aim to create a consistent and stable totality
 
 Similar to the full /etc/apt/sources.list.
 
-*** Packages Selections
+*** Packages Adoption
 
-a number of packages from the totality of [[Profiles Collections]].
+By package adoption, we mean:
+
+1 - Installation) Selection of packages from the totality of [[Profiles Collections]] and installing them.
+2 - Configuration) Configuration of a package or harmonious configuration of groups of related packages.
+3 - Realm Extensions) Allowing for Site/User extended configurations.
+
+*** Initial (built-in) Packages Adoptions
+
+Blee comes pre-loaded adopted packages in the initial environment.
+
+*** Individual Package Adoption Installer And Configuration Managers
+
+For individual packages we use bnpa:pkgName.el which uses
+COMEEGA dblocks heavily.
+
+*** Grouped Package Installer And Configuration Managers
+
+Blee does not use use-package or leaf.el or ...
+
+For individual packages we use bgpa:pkgName.el which uses
+COMEEGA dblocks heavily.
+
+*** Realm Extensions For Individual Package Configuration
+
+Site and users extenstions.
+
+*** Realm Extensions For Group Package Configuration
+
+Site and users extenstions.
