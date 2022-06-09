@@ -40,15 +40,17 @@ There after, a given package at a specific commitHash which is specified in one 
 *b:pkgsProfile:blee3:* profiles included in *b:pkgsProfile:collection:blee3* collection
 can very conveniently be installed, like so:
 #+begin_src emacs-lisp
-(straight-use-package 'packageName)
+(b:pkg:straight|install 'subjectPackage)
 #+end_src
 
-This results in obataining
+For a valid subjectPackage, this results in one of two things.
+When subjectPackage is found, it is installed at the specified commitHash.
 
 In terms of parallels between emacs's this packaging model and debian's
 packaging model one can consider:
 
-| Debian Apt Model                           | Emacs-pkgs-profile Model         |
+| *Debian Apt Model*                          | *Emacs-pkgs-profile Model*        |
+|--------------------------------------------|----------------------------------|
 | dpkg                                       | straight                         |
 | apt                                        | pkgs-profile + straight          |
 | /etc/apt/sources.list                      | b:pkgsProfile:collection:default |
@@ -185,9 +187,9 @@ Similar to the full /etc/apt/sources.list.
 
 By package adoption, we mean:
 
-1 - Installation) Selection of packages from the totality of [[Profiles Collections]] and installing them.
-2 - Configuration) Configuration of a package or harmonious configuration of groups of related packages.
-3 - Realm Extensions) Allowing for Site/User extended configurations.
+1 - *Installation*) Selection of packages from the totality of [[Profiles Collections]] and installing them.
+2 - *Configuration*) Configuration of a package or harmonious configuration of groups of related packages.
+3 - *Realm Extension Hooks*) Allowing for Site/User extended configurations.
 
 *** Initial (built-in) Packages Adoptions
 
