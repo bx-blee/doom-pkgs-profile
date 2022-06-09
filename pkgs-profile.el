@@ -499,8 +499,10 @@ Things can become complicated with named-pkgs-profile.
 ;;;#+END:
                                           <pkgsProfileSymbol <straightArg &rest <straightOptArgs)
    " #+begin_org
-** DocStr: Set ~straight-current-profile~ to *<pkgsProfileSymbol* and run ~straight-use-package~ with *<pkgSymb*.
+** DocStr: Set ~straight-current-profile~ to *<pkgsProfileSymbol* and run ~straight-use-package~ with *<straightArg*.
 This is the primary function that invokes ~straight-use-package~.
+When *<straightArg* is a list, (MELPA-STYLE-RECIPE), the symbol naming a package is its first member.
+That is extracted and used to identify subjectPackage.
 #+end_org "
    (let* (
           ($pkgName)
@@ -516,7 +518,7 @@ This is the primary function that invokes ~straight-use-package~.
      (let (
            (straight-current-profile (intern $profileName))
            )
-       ;; Install the package if needed
+       ;; Install the package
        (message (format "b:pkg:straight|profiledInstall profile=%s pkg=%s arg=%s optArgs=%s"
                         $pkgName $profileName <straightArg <straightOptArgs))
        (if <straightOptArgs
@@ -547,6 +549,8 @@ This is the primary function that invokes ~straight-use-package~.
                                         <pkgName <pkgsProfilesList)
    " #+begin_org
 ** DocStr: Find *<pkgName* in any of *<pkgsProfilesList*, return that profile when found. nil otherwise.
+*** TODO rename it to b:pkgProfile:collection|isIn? --- This is not straight specific at all.
+*** TODO We also need b:pkgProfile:collection:profileName|isIn?
 #+end_org "
    (let* (
           ($pkgsList)

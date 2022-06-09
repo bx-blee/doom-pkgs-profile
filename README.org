@@ -7,8 +7,10 @@ pinned packages based on their commitHash through straight.el.
 
 * Summary
 
+[Legend: =pkgOrFile= is for package names, ~form~ is a lisp construct, *concept* is a concept, *args* in . ]
+
 =pkgs-profile= sits on top of =straight.el= and ~straight-use-package~ and
-installs packages that are pre-specified at a desired commitHash and labeled
+installs packages that are pre-specified at a desired *commitHash* and labeled
 with a =pkgsProfileName= through straight's ~straight-current-profile~
 machinary.
 
@@ -22,29 +24,57 @@ consistent and stable.
 The complete set of consitent packages is specified as a list of tupples (alist) in the form of
 (pkgName . commitHash) consistent with the type of the result of ~(straight--lockfile-read-all)~.
 
-Each b:pkgsProfile:<setName>:<subSet> is such an alist. =blee3:pkgs-profile=
+Each *b:pkgsProfile:<collectionName>:<profileName>* is such an alist.
+Consider blee3 as an example of a collection. =blee3-pkgs-profile=
 (https://github.com/bx-blee/blee3-pkgs-profile) emacs package uses
-=pkgs-profile= through specification of  *b:pkgsProfile:collection:*.
+=pkgs-profile= through specification of  ~b:pkgsProfile:collection:default~ being ~b:pkgsProfile:collection:blee3~.
 
-In this case, =blee3:pkgs-profile= sits on top of =pkgs-profile= which sits on top of =straight.el=.
+In this case, =blee3-pkgs-profile= sits on top of =pkgs-profile= which sits on top of =straight.el=.
 
-=blee3:pkgs-profile= binds itself to  =pkgs-profile=, through:
+=blee3-pkgs-profile= binds itself to  =pkgs-profile=, through:
 #+begin_src emacs-lisp
    (setq b:pkgsProfile:collection:default b:pkgsProfile:collection:blee3)
    (setq b:pkgsProfile:orphan 'b:pkgsProfile:blee3:orphan)
+   (setq b:pkgsProfile:native 'b:pkgsProfile:blee3:native)
    (b:pkgsProfile:collection|prepare)
    (b:pkgsProfile:collection:straight--lockfile-read-all|advice-add)
 #+end_src
 
-There after, a given package at a specific commitHash which is specified in one of the
-*b:pkgsProfile:blee3:* profiles included in *b:pkgsProfile:collection:blee3* collection
+** Use Of ~(b:pkg:straight|install *subjectPackage*)~
+
+Thereafter, a given package at a specific commitHash which is specified in one of the
+*b:pkgsProfile:blee3:* profiles included in ~b:pkgsProfile:collection:blee3~ collection
 can very conveniently be installed, like so:
 #+begin_src emacs-lisp
-(b:pkg:straight|install 'subjectPackage)
+(b:pkg:straight|install subjectPackageInfo)
 #+end_src
 
-For a valid subjectPackage, this results in one of two things.
-When subjectPackage is found, it is installed at the specified commitHash.
+For a valid ~subjectPackage~, this results in one of two things.
+When ~subjectPackage~ is found, it is installed at the specified commitHash.
+and it is tagged with the profileName of the  ~b:pkgsProfile:<collectionName>:<profileName>~
+in which ~subjectPackage~ was found. (Through ~b:pkg:straight|profiledInstall~)
+When ~subjectPackage~ is not found, the latest is installed and it is tagged with the *profileName*
+assocaied with ~b:pkgsProfile:orphan~. (Through ~b:pkg:straight|orphanInstall~)
+
+~b:pkg:straight|install~ is the most common way of installing packages.
+It parallels ~straight-use-package~ but augments it with implicit specification of
+*commitHash* and implicit specification of a *profileName*
+
+See DocStr for deatils.
+
+** Use Of ~(b:pkg:straight|profiledInstall *profileName* *subjectPackage*)~
+
+Use this when you want to be explicit about which profileName to use.
+Use this when you know that *subjectPackage* is valid in the scope of *profileName*
+
+See DocStr for deatils.
+
+** Use Of ~(b:pkg:straight|orphanInstall *subjectPackage*)~
+
+Install *subjectPackage* as orphan.
+
+See DocStr for deatils.
+
 
 In terms of parallels between emacs's this packaging model and debian's
 packaging model one can consider:
