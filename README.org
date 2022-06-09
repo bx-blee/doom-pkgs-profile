@@ -2,15 +2,17 @@
 #+TITLE: pkgs-profile
 #+OPTIONS: toc:4
 
-=pkgs-profile= is a general purpose profiles-manager that facilitates
+=pkgs-profile= is a general purpose emacs profiles-manager that facilitates
 installation of a consistent set of
 pinned packages based on their commitHash through straight.el.
+It is a layer on top of =straight.el= and augments it with abstractions of
+collections and externally specified profiles which mimic the paradigm of Debian's /etc/apt/sources.list.
 
 * Table Of Contents     :TOC:
 - [[#summary][Summary]]
-  - [[#use-of-bpkgstraightinstall-subjectpackage][Use Of ~(b:pkg:straight|install *subjectPackage*)~]]
-  - [[#use-of-bpkgstraightprofiledinstall-profilename-subjectpackage][Use Of ~(b:pkg:straight|profiledInstall *profileName* *subjectPackage*)~]]
-  - [[#use-of-bpkgstraightorphaninstall-subjectpackage][Use Of ~(b:pkg:straight|orphanInstall *subjectPackage*)~]]
+  - [[#use-of-bpkgstraightinstall-subjectpackage][Use Of (b:pkg:straight|install *subjectPackage*)]]
+  - [[#use-of-bpkgstraightprofiledinstall-profilename-subjectpackage][Use Of (b:pkg:straight|profiledInstall *profileName* *subjectPackage*)]]
+  - [[#use-of-bpkgstraightorphaninstall-subjectpackage][Use Of (b:pkg:straight|orphanInstall *subjectPackage*)]]
 - [[#about-pkgs-profile-blee3-pkgs-profile-blee-bisos-and-bystar][About pkgs-profile, blee3-pkgs-profile, Blee, BISOS and ByStar]]
 - [[#bisos--blees-git-oriented-profiled-packages-management-framework][BISOS & Blee's Git Oriented Profiled Packages Management Framework]]
   - [[#key-expected-characteristics-of-profiled-package-management-frameworks][Key Expected Characteristics Of Profiled Package Management Frameworks]]
@@ -23,7 +25,7 @@ pinned packages based on their commitHash through straight.el.
 
 =pkgs-profile= sits on top of =straight.el= and ~straight-use-package~ and
 installs packages that are pre-specified at a desired *commitHash* and labeled
-with a =pkgsProfileName= through straight's ~straight-current-profile~
+with a *collectionName:profileName* through straight's ~straight-current-profile~
 machinary.
 
 The full consistent set of
@@ -40,6 +42,7 @@ Each *b:pkgsProfile:<collectionName>:<profileName>* is such an alist.
 Consider blee3 as an example of a collection. =blee3-pkgs-profile=
 (https://github.com/bx-blee/blee3-pkgs-profile) emacs package uses
 =pkgs-profile= through specification of  ~b:pkgsProfile:collection:default~ being ~b:pkgsProfile:collection:blee3~.
+The above then provides for reference to a pinned-package through *collectionName:profileName:packageName*.
 
 In this case, =blee3-pkgs-profile= sits on top of =pkgs-profile= which sits on top of =straight.el=.
 
@@ -52,7 +55,7 @@ In this case, =blee3-pkgs-profile= sits on top of =pkgs-profile= which sits on t
    (b:pkgsProfile:collection:straight--lockfile-read-all|advice-add)
 #+end_src
 
-** Use Of ~(b:pkg:straight|install *subjectPackage*)~
+** Use Of (b:pkg:straight|install *subjectPackage*)
 
 Thereafter, a given package at a specific commitHash which is specified in one of the
 *b:pkgsProfile:blee3:* profiles included in ~b:pkgsProfile:collection:blee3~ collection
@@ -74,16 +77,18 @@ It parallels ~straight-use-package~ but augments it with implicit specification 
 
 See DocStr for deatils.
 
-** Use Of ~(b:pkg:straight|profiledInstall *profileName* *subjectPackage*)~
+** Use Of (b:pkg:straight|profiledInstall *profileName* *subjectPackage*)
 
 Use this when you want to be explicit about which profileName to use.
 Use this when you know that *subjectPackage* is valid in the scope of *profileName*
 
 See DocStr for deatils.
 
-** Use Of ~(b:pkg:straight|orphanInstall *subjectPackage*)~
+** Use Of (b:pkg:straight|orphanInstall *subjectPackage*)
 
 Install *subjectPackage* as orphan.
+~b:pkg:straight|orphanInstall~ in turn goes through ~b:pkg:straight|profiledInstall~
+with *profileName* being ~b:pkgsProfile:orphan~
 
 See DocStr for deatils.
 
