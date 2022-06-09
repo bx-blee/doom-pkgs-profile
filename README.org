@@ -1,9 +1,21 @@
 
 #+TITLE: pkgs-profile
+#+OPTIONS: toc:4
 
 =pkgs-profile= is a general purpose profiles-manager that facilitates
 installation of a consistent set of
 pinned packages based on their commitHash through straight.el.
+
+* Table Of Contents     :TOC:
+- [[#summary][Summary]]
+  - [[#use-of-bpkgstraightinstall-subjectpackage][Use Of ~(b:pkg:straight|install *subjectPackage*)~]]
+  - [[#use-of-bpkgstraightprofiledinstall-profilename-subjectpackage][Use Of ~(b:pkg:straight|profiledInstall *profileName* *subjectPackage*)~]]
+  - [[#use-of-bpkgstraightorphaninstall-subjectpackage][Use Of ~(b:pkg:straight|orphanInstall *subjectPackage*)~]]
+- [[#about-pkgs-profile-blee3-pkgs-profile-blee-bisos-and-bystar][About pkgs-profile, blee3-pkgs-profile, Blee, BISOS and ByStar]]
+- [[#bisos--blees-git-oriented-profiled-packages-management-framework][BISOS & Blee's Git Oriented Profiled Packages Management Framework]]
+  - [[#key-expected-characteristics-of-profiled-package-management-frameworks][Key Expected Characteristics Of Profiled Package Management Frameworks]]
+  - [[#overview-of-a-generalized--profiled-packages-management-framework][Overview Of A Generalized  Profiled Packages Management Framework]]
+  - [[#key-concepts][Key Concepts:]]
 
 * Summary
 
