@@ -91,7 +91,7 @@ and don't have a commitHash.
           ($pkgsProfile (eval <pkgsProfileSymbol))
           ($pkgsListIntake)
          )
-     (message (format "Preparing %s :: Reading %s"
+     (message (format "b:pkgsProfile:file:read|prepare :: Preparing %s :: Reading %s"
                       (get <pkgsProfileSymbol ':profileName)  $pkgsProfile))
 
      (setq $pkgsListIntake (b:read|fromFile $pkgsProfile))

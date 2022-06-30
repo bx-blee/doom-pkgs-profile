@@ -1,4 +1,3 @@
-
 #+TITLE: pkgs-profile
 #+OPTIONS: toc:4
 
@@ -14,14 +13,14 @@ collections and externally specified profiles which mimic the paradigm of Debian
   - [[#use-of-bpkgstraightprofiledinstall-profilename-subjectpackage][Use Of (b:pkg:straight|profiledInstall *profileName* *subjectPackage*)]]
   - [[#use-of-bpkgstraightorphaninstall-subjectpackage][Use Of (b:pkg:straight|orphanInstall *subjectPackage*)]]
 - [[#about-pkgs-profile-blee3-pkgs-profile-blee-bisos-and-bystar][About pkgs-profile, blee3-pkgs-profile, Blee, BISOS and ByStar]]
-- [[#bisos--blees-git-oriented-profiled-packages-management-framework][BISOS & Blee's Git Oriented Profiled Packages Management Framework]]
+- [[#git-oriented-profiled-packages-management-framework][Git Oriented Profiled Packages Management Framework]]
   - [[#key-expected-characteristics-of-profiled-package-management-frameworks][Key Expected Characteristics Of Profiled Package Management Frameworks]]
   - [[#overview-of-a-generalized--profiled-packages-management-framework][Overview Of A Generalized  Profiled Packages Management Framework]]
   - [[#key-concepts][Key Concepts:]]
 
 * Summary
 
-[Legend: =pkgOrFile= is for package names, ~form~ is a lisp construct, *concept* is a concept, *args* in . ]
+[Legend: =pkgOrFile= is for package names, ~form~ is a lisp construct, *concept* is a concept, *args* in DocStr. ]
 
 =pkgs-profile= sits on top of =straight.el= and ~straight-use-package~ and
 installs packages that are pre-specified at a desired *commitHash* and labeled
@@ -127,11 +126,16 @@ So, it is an understatement to say that =pkgs-profile= is part of a much bigger 
 
 The broader domain of =pkgs-profile= is that of a "Git Oriented Profiles Packages Management Framework"
 
-* BISOS & Blee's Git Oriented Profiled Packages Management Framework
+* Git Oriented Profiled Packages Management Framework
 
 Based on key experiences of the past two decades, and in particular the lessons
 learned from Debian's packaging system and uses of git as a version referenceable
 file system; certain expectations have evolved for packages management framework.
+
+While here we focus on BISOS & Blee's profile and package management uses, the
+problems and challenges that we bring up and address are common. And apply to
+git oriented profiled packages management frameworks in general. However, here
+we focus on emacs =pkgs-profile= in particular and draw parallels when needed.
 
 ** Key Expected Characteristics Of Profiled Package Management Frameworks
 
@@ -147,12 +151,13 @@ The following characterisics are expected:
 
 ** Overview Of A Generalized  Profiled Packages Management Framework
 
-Emacs packaging, packages and use of packages has been evolving in adhoc manner
-without a roadmap.
+Emacs packaging, packages and use of packages has been evolving in an adhoc
+manner without a roadmap.
 
 
 Without such a roadmap, we could easily get lost and reinvent and diverge.
 To some extent that (getting lost) has already happened. Some symptoms are visible.
+These include:
 
 - package.el (the built-in package manager in emacs) has proven to be a dead-end.
 
@@ -184,7 +189,7 @@ First we introduce the bigger picture, then we walk through its key concepts.
 Refering to the above model and framework and in the specific context of Blee
 packages, we enumerate the following concepts.
 
-The above picture and the below concept descriptios establish a model and terminology
+The above picture and the below concept descriptions establish a model and terminology
 that can provide for a roadmap.
 
 
@@ -192,11 +197,11 @@ that can provide for a roadmap.
 
 First, we disable the built-in emacs packages manager.
 
-Instaed of the built-in package.el, we have evolved straight.el on its fringes
+Instead of the built-in package.el, we have evolved straight.el on its fringes
 in a variety of ways so that it can properly function as a profiles aware
 package manager.
 
-We offer these conceptual evolutions, to straight.el. At a minimum, we hope that
+We offer these conceptual evolutions to straight.el. At a minimum, we hope that
 straight.el developers would consider:
 
 - =pkgs-profile=  modification involve addition of ~advice-add~ around an internal function:
