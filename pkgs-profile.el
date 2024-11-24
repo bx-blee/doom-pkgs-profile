@@ -663,6 +663,72 @@ That is extracted and used to identify subjectPackage.
 " orgCmntEnd)
 
 
+;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "b:pkg:forked" :extraInfo ""
+(orgCmntBegin "
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*     [[elisp:(outline-show-subtree+toggle)][| _b:pkg:forked_: |]]    [[elisp:(org-shifttab)][<)]] E|
+" orgCmntEnd)
+;;;#+END:
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:forked|is?"
+(orgCmntBegin "
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  defun      [[elisp:(outline-show-subtree+toggle)][||]]  <<b:pkg:forked|is?>>  --  --   [[elisp:(org-cycle)][| ]]
+" orgCmntEnd)
+(defun b:pkg:forked|is? (
+;;;#+END:
+                         <pkgSymb)
+   " #+begin_org
+** TODO DocStr: For a given *<pkgSym* determine if a forked environment exists
+#+end_org "
+  (let* (
+         ($pkgName (symbol-name <pkgSymb))
+         ($forkedBaseDir (b:pkg:forked|basedir <pkgSymb))
+         ($result nil)
+         )
+    (when (file-directory-p $forkedBaseDir)
+        (setq $result t))
+    $result))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkg:forked|is?  'subed)
+#+END_SRC
+
+#+RESULTS:
+
+" orgCmntEnd)
+
+
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:forked|basedir"
+(orgCmntBegin "
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  defun      [[elisp:(outline-show-subtree+toggle)][||]]  <<b:pkg:forked|basedir>>  --  --   [[elisp:(org-cycle)][| ]]
+" orgCmntEnd)
+(defun b:pkg:forked|basedir (
+;;;#+END:
+                             <pkgSymb )
+   " #+begin_org
+** TODO DocStr: For a given *<pkgSym* determine if a forked environment exists
+#+end_org "
+  (let* (
+         ($pkgName (symbol-name <pkgSymb))
+         )
+    (s-lex-format "/bisos/git/bxRepos/forked/${$pkgName}")
+    ))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkg:forked|basedir  'subed)
+#+END_SRC
+
+#+RESULTS:
+: /bisos/git/bxRepos/forked/subed
+
+" orgCmntEnd)
+
+
 
 
 ;;;#+BEGIN: b:elisp:file/provide :modName nil
