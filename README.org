@@ -15,7 +15,7 @@ collections and externally specified profiles which mimic the paradigm of Debian
 - [[#about-pkgs-profile-blee3-pkgs-profile-blee-bisos-and-bystar][About pkgs-profile, blee3-pkgs-profile, Blee, BISOS and ByStar]]
 - [[#git-oriented-profiled-packages-management-framework][Git Oriented Profiled Packages Management Framework]]
   - [[#key-expected-characteristics-of-profiled-package-management-frameworks][Key Expected Characteristics Of Profiled Package Management Frameworks]]
-  - [[#overview-of-a-generalized--profiled-packages-management-framework][Overview Of A Generalized  Profiled Packages Management Framework]]
+  - [[#overview-of-a-generalized-profiled-packages-management-framework][Overview Of A Generalized Profiled Packages Management Framework]]
   - [[#key-concepts][Key Concepts:]]
 
 * Summary
@@ -45,7 +45,7 @@ The above then provides for reference to a pinned-package through *collectionNam
 
 In this case, =blee3-pkgs-profile= sits on top of =pkgs-profile= which sits on top of =straight.el=.
 
-=blee3-pkgs-profile= binds itself to  =pkgs-profile=, through:
+=blee3-pkgs-profile= binds itself to  pkgs-profile=, through:
 #+begin_src emacs-lisp
    (setq b:pkgsProfile:collection:default b:pkgsProfile:collection:blee3)
    (setq b:pkgsProfile:orphan 'b:pkgsProfile:blee3:orphan)
@@ -95,12 +95,14 @@ See DocStr for deatils.
 In terms of parallels between emacs's this packaging model and debian's
 packaging model one can consider:
 
-| *Debian Apt Model*                          | *Emacs-pkgs-profile Model*        |
-|--------------------------------------------|----------------------------------|
+| *Debian Apt Model*                           | *Emacs-pkgs-profile Model*         |
+|--------------------------------------------+----------------------------------|
 | dpkg                                       | straight                         |
 | apt                                        | pkgs-profile + straight          |
 | /etc/apt/sources.list                      | b:pkgsProfile:collection:default |
 | deb http://deb.debian.org/debian/ bullseye | blee3:pkgs-profile               |
+|--------------------------------------------+----------------------------------|
+
 
 Emacs' packaging model has not been well thought through.
 =pkgs-profile= is an attempt at evolving that model.
@@ -149,11 +151,10 @@ The following characterisics are expected:
 - Convenient packaging standards.
 - Convenience in extending profiles.
 
-** Overview Of A Generalized  Profiled Packages Management Framework
+** Overview Of A Generalized Profiled Packages Management Framework
 
 Emacs packaging, packages and use of packages has been evolving in an adhoc
 manner without a roadmap.
-
 
 Without such a roadmap, we could easily get lost and reinvent and diverge.
 To some extent that (getting lost) has already happened. Some symptoms are visible.
@@ -172,7 +173,7 @@ These include:
   profiles. Then leaf.el does more of the same.
   Neither of these deal with the concept of realm extensions.
 
-- Then come the likes of doom which address the profiling concept, but just for
+- Then comes the likes of doom which address the profiling concept, but just for
   themselves and not as a general solution.
 
 So, in Blee and in pkgs-profile, in order to deal with these symptoms, we first
