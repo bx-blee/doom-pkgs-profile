@@ -7,6 +7,10 @@ pinned packages based on their commitHash through straight.el.
 It is a layer on top of =straight.el= and augments it with abstractions of
 collections and externally specified profiles which mimic the paradigm of Debian's /etc/apt/sources.list.
 
+In Blee, =blee3-pkgs-profile= sits on top of =pkgs-profile=.
+See https://github.com/bx-blee/blee3-pkgs-profile.
+
+
 * Table Of Contents     :TOC:
 - [[#summary][Summary]]
   - [[#use-of-bpkgstraightinstall-subjectpackage][Use Of (b:pkg:straight|install *subjectPackage*)]]
@@ -45,7 +49,7 @@ The above then provides for reference to a pinned-package through *collectionNam
 
 In this case, =blee3-pkgs-profile= sits on top of =pkgs-profile= which sits on top of =straight.el=.
 
-=blee3-pkgs-profile= binds itself to  pkgs-profile=, through:
+=blee3-pkgs-profile= binds itself to  =pkgs-profile=, through:
 #+begin_src emacs-lisp
    (setq b:pkgsProfile:collection:default b:pkgsProfile:collection:blee3)
    (setq b:pkgsProfile:orphan 'b:pkgsProfile:blee3:orphan)

@@ -519,8 +519,10 @@ That is extracted and used to identify subjectPackage.
            (straight-current-profile (intern $profileName))
            )
        ;; Install the package
-       (message (format "b:pkg:straight|profiledInstall profile=%s pkg=%s arg=%s optArgs=%s"
-                        $pkgName $profileName <straightArg <straightOptArgs))
+       (message
+        (s-lex-format
+         "b:pkg:straight|profiledInstall pkg=${$pkgName} profile=${$profileName} arg=${<straightArg} optArgs=${<straightOptArgs}"))
+
        (if <straightOptArgs
            (setq $result (straight-use-package <straightArg <straightOptArgs))
          (setq $result (straight-use-package <straightArg)))
@@ -537,6 +539,63 @@ That is extracted and used to identify subjectPackage.
 #+RESULTS:
 
 " orgCmntEnd)
+
+
+;;;#+BEGIN:  b:elisp:defs/cl-defun :defName "b:pkg:straight|profiledInstallForkedOrDevOrActual"
+(orgCmntBegin "
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  cl-defun   [[elisp:(outline-show-subtree+toggle)][||]]  <<b:pkg:straight|profiledInstallForkedOrDevOrActual>>  --  -- Set ~straight-current-profile~ to *<pkgsProfileSymbol* and run ~straight-use-package~ with *<straightArg*.  [[elisp:(org-cycle)][| ]]
+" orgCmntEnd)
+(cl-defun b:pkg:straight|profiledInstallForkedOrDevOrActual (
+;;;#+END:
+                                          <pkgsProfileSymbol <straightArg &rest <straightOptArgs)
+   " #+begin_org
+** DocStr: Set ~straight-current-profile~ to *<pkgsProfileSymbol* and run ~straight-use-package~ with *<straightArg*.
+This is the primary function that invokes ~straight-use-package~.
+When *<straightArg* is a list, (MELPA-STYLE-RECIPE), the symbol naming a package is its first member.
+That is extracted and used to identify subjectPackage.
+#+end_org "
+   (let* (
+          ($pkgName)
+          ($profileName (get <pkgsProfileSymbol ':profileName))
+          ($result nil)
+          )
+     (unless $profileName (error "$profileName is mandatory") (cl-return nil))
+
+     (if (listp <straightArg)
+         (setq $pkgName (cl-first <straightArg))
+       (setq $pkgName <straightArg))
+
+     (cond ((b:pkg:forked|is?  $pkgName)
+            (setq $result
+                  (b:pkg:straight|profiledInstall
+                   <pkgsProfileSymbol
+                   `(,$pkgName :local-repo ,(b:pkg:forked|basedir $pkgName)))))
+           ((b:pkg:devel|is?  <pkgsProfileSymbol)
+            (setq $result
+                  (b:pkg:straight|profiledInstall
+                   <pkgsProfileSymbol
+                   `(,$pkgName :local-repo ,(b:pkg:devel|basedir $pkgName)))))
+           (t
+            (if <straightOptArgs
+                (setq $result
+                      (b:pkg:straight|profiledInstall <pkgsProfileSymbol <straightArg <straightOptArgs))
+              (setq $result
+                    (b:pkg:straight|profiledInstall <pkgsProfileSymbol <straightArg))))
+            )
+     $result))
+
+(orgCmntBegin "
+** Basic Usage:
+(get 'b:pkgsProfile:blee3:doom3 ':profileName)
+#+BEGIN_SRC emacs-lisp
+(b:pkg:straight|profiledInstall 'add-node-modules-path 'b:pkgsProfile:blee3:doom3)
+#+END_SRC
+
+#+RESULTS:
+
+" orgCmntEnd)
+
+
 
 
 
@@ -669,6 +728,32 @@ That is extracted and used to identify subjectPackage.
 " orgCmntEnd)
 ;;;#+END:
 
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:forked|basedir"
+(orgCmntBegin "
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  defun      [[elisp:(outline-show-subtree+toggle)][||]]  <<b:pkg:forked|basedir>>  --  --   [[elisp:(org-cycle)][| ]]
+" orgCmntEnd)
+(defun b:pkg:forked|basedir (
+;;;#+END:
+                             <pkgSymb )
+   " #+begin_org
+** TODO DocStr: For a given *<pkgSym* determine if a forked environment exists
+#+end_org "
+  (let* (
+         ($pkgName (symbol-name <pkgSymb))
+         )
+    (s-lex-format "/bisos/git/bxRepos/forked/${$pkgName}")
+    ))
+
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkg:forked|basedir  'subed)
+#+END_SRC
+
+#+RESULTS:
+: /bisos/git/bxRepos/forked/subed
+
+" orgCmntEnd)
 
 ;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:forked|is?"
 (orgCmntBegin "
@@ -700,27 +785,32 @@ That is extracted and used to identify subjectPackage.
 " orgCmntEnd)
 
 
-
-;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:forked|basedir"
+;;;#+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :title "b:pkg:devel" :extraInfo ""
 (orgCmntBegin "
-*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  defun      [[elisp:(outline-show-subtree+toggle)][||]]  <<b:pkg:forked|basedir>>  --  --   [[elisp:(org-cycle)][| ]]
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*     [[elisp:(outline-show-subtree+toggle)][| _b:pkg:forked_: |]]    [[elisp:(org-shifttab)][<)]] E|
 " orgCmntEnd)
-(defun b:pkg:forked|basedir (
+;;;#+END:
+
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:devel|basedir"
+(orgCmntBegin "
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  defun      [[elisp:(outline-show-subtree+toggle)][||]]  <<b:pkg:devel|basedir>>  --  --   [[elisp:(org-cycle)][| ]]
+" orgCmntEnd)
+(defun b:pkg:devel|basedir (
 ;;;#+END:
                              <pkgSymb )
    " #+begin_org
-** TODO DocStr: For a given *<pkgSym* determine if a forked environment exists
+** TODO DocStr: For a given *<pkgSym* determine if a development environment exists
 #+end_org "
   (let* (
          ($pkgName (symbol-name <pkgSymb))
          )
-    (s-lex-format "/bisos/git/bxRepos/forked/${$pkgName}")
+    (s-lex-format "/bisos/git/bxRepos/blee/${$pkgName}")
     ))
 
 (orgCmntBegin "
 ** Basic Usage:
 #+BEGIN_SRC emacs-lisp
-(b:pkg:forked|basedir  'subed)
+(b:pkg:devel|basedir  'subed)
 #+END_SRC
 
 #+RESULTS:
@@ -728,7 +818,37 @@ That is extracted and used to identify subjectPackage.
 
 " orgCmntEnd)
 
+;;;#+BEGIN:  b:elisp:defs/defun :defName "b:pkg:devel|is?"
+(orgCmntBegin "
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  defun      [[elisp:(outline-show-subtree+toggle)][||]]  <<b:pkg:devel|is?>>  --  --   [[elisp:(org-cycle)][| ]]
+" orgCmntEnd)
+(defun b:pkg:devel|is? (
+;;;#+END:
+                         <pkgSymb)
+   " #+begin_org
+** TODO DocStr: For a given *<pkgSym* determine if a forked environment exists
+#+end_org "
+  (let* (
+         ($pkgName (symbol-name <pkgSymb))
+         ($develBaseDir (b:pkg:devel|basedir <pkgSymb))
+         ($result nil)
+         )
+    (if-when b:g:dev:mode?
+      (when (file-directory-p $develBaseDir)
+        (setq $result t)))
+    (else-unless  b:g:dev:mode?
+      (setq $result t))
+    $result))
 
+(orgCmntBegin "
+** Basic Usage:
+#+BEGIN_SRC emacs-lisp
+(b:pkg:devel|is?  'mtdt)
+#+END_SRC
+
+#+RESULTS:
+
+" orgCmntEnd)
 
 
 ;;;#+BEGIN: b:elisp:file/provide :modName nil
